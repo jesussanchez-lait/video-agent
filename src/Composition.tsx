@@ -139,10 +139,33 @@ export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
 
   const audioFromMap = useMemo(() => {
     const map = new Map<string, number>();
-    for (const audio of audioSeqs) {
+
+    // Loop tracks (background music) anchor freely — they fill the whole composition.
+    const loopAudio = audioSeqs.filter(
+      (s) => (s.sceneData as Record<string, unknown>)?.loop === true
+    );
+    for (const audio of loopAudio) {
       const anchor = visualSeqs.find((v) => v.order >= audio.order);
       map.set(audio.id, anchor ? (visualFromMap.get(anchor.id) ?? 0) : 0);
     }
+
+    // Non-loop tracks (voice / SFX) are sequenced strictly: each one starts
+    // at max(its visual anchor, end of previous non-loop track) so they never overlap.
+    const nonLoopAudio = audioSeqs
+      .filter((s) => (s.sceneData as Record<string, unknown>)?.loop !== true)
+      .map((audio) => {
+        const anchor = visualSeqs.find((v) => v.order >= audio.order);
+        return { audio, anchorFrame: anchor ? (visualFromMap.get(anchor.id) ?? 0) : 0 };
+      })
+      .sort((a, b) => a.anchorFrame - b.anchorFrame || a.audio.order - b.audio.order);
+
+    let prevEnd = 0;
+    for (const { audio, anchorFrame } of nonLoopAudio) {
+      const from = Math.max(anchorFrame, prevEnd);
+      map.set(audio.id, from);
+      prevEnd = from + audio.durationInFrames;
+    }
+
     return map;
   }, [audioSeqs, visualSeqs, visualFromMap]);
 

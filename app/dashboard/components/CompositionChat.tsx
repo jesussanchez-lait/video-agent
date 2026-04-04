@@ -66,6 +66,30 @@ const TYPE_COLOR: Record<AssetType, string> = {
   font: "#c864ff",
 };
 
+// ─── Plantilla de prompt ideal ────────────────────────────────────────────────
+
+const IDEAL_PROMPT = `Crea un reel de 45 segundos para [Nombre del cliente].
+
+Periodo: [Ej: Q1 2025 — Enero a Marzo]
+Plataformas: [Instagram, TikTok, LinkedIn, Meta Ads…]
+
+Métricas principales:
+- Impresiones: [Ej: 3.2M] ([Ej: +24%] vs periodo anterior)
+- Me gusta: [Ej: 148K] ([Ej: +18%])
+- Nuevos seguidores: [Ej: 42K]
+- Tasa de engagement: [Ej: 4.6%]
+- CTR: [Ej: 4.7%]
+- Costo por clic: [Ej: $0.32]
+
+Top contenidos:
+1. [Título del contenido 1] — [Ej: 420K impresiones] ([Plataforma])
+2. [Título del contenido 2] — [Ej: 310K] ([Plataforma])
+3. [Título del contenido 3] — [Ej: 195K] ([Plataforma])
+
+Insight clave: [Ej: el video genera 3× más engagement que los carruseles]
+
+Incluye música instrumental animada y narración en español.`;
+
 /** Genera el bloque de contexto de assets para el prompt de IA */
 function buildAssetContext(assets: AssetDTO[]): string {
   if (assets.length === 0) return "";
@@ -399,6 +423,7 @@ function ChatStep({
   onSend,
   onConcretar,
   onBack,
+  onUseTemplate,
 }: {
   assets: AssetDTO[];
   messages: ChatMessage[];
@@ -414,6 +439,7 @@ function ChatStep({
   onSend: () => void;
   onConcretar: () => void;
   onBack: () => void;
+  onUseTemplate: () => void;
 }) {
   const isBusy = loading || creating;
   return (
@@ -460,12 +486,34 @@ function ChatStep({
       {/* Messages */}
       <div style={{ flex: 1, overflow: "auto", padding: "8px 20px", display: "flex", flexDirection: "column", gap: 10, minHeight: 0 }}>
         {messages.length === 0 && (
-          <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, lineHeight: 1.5, margin: 0 }}>
-            {assets.length > 0
-              ? `Describe el video. La IA usará los ${assets.length} asset${assets.length > 1 ? "s" : ""} que subiste.`
-              : "Describe el video que quieres generar."}
-            {" "}Ej: &quot;Video de presentación con logo, intro, servicios y contacto&quot;
-          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 12, lineHeight: 1.5, margin: 0 }}>
+              {assets.length > 0
+                ? `Describe el video. La IA usará los ${assets.length} asset${assets.length > 1 ? "s" : ""} que subiste.`
+                : "Describe el video que quieres generar."}
+            </p>
+            <button
+              type="button"
+              onClick={onUseTemplate}
+              style={{
+                alignSelf: "flex-start",
+                padding: "7px 14px",
+                borderRadius: 8,
+                border: "1px solid rgba(92,89,202,0.5)",
+                background: "rgba(92,89,202,0.12)",
+                color: "#a09ee8",
+                fontSize: 11,
+                fontWeight: 600,
+                cursor: "pointer",
+                letterSpacing: 0.3,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <span style={{ fontSize: 13 }}>📋</span> Usar plantilla de brief
+            </button>
+          </div>
         )}
         {messages.map((m) => (
           <div
@@ -523,7 +571,7 @@ function ChatStep({
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onSend(); } }}
             placeholder="Describe tu video…"
-            rows={2}
+            rows={6}
             disabled={isBusy}
             style={{
               flex: 1,
@@ -802,7 +850,6 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
 
       onCreated(createData.composition.id);
       onClose();
-      window.location.href = `/editor?id=${createData.composition.id}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error desconocido");
       setLoading(false);
@@ -836,7 +883,6 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
       if (!res.ok) throw new Error(data.error ?? "Error");
       onCreated(data.composition.id);
       onClose();
-      window.location.href = `/editor?id=${data.composition.id}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error al crear");
       setCreating(false);
@@ -855,7 +901,7 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
       onClick={(e) => e.target === e.currentTarget && !isBusy && onClose()}
     >
       <div
-        style={{ width: "100%", maxWidth: 560, height: "min(88vh, 680px)", backgroundColor: "#0a0a0c", borderRadius: 16, border: "1px solid rgba(157,255,32,0.2)", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.6)" }}
+        style={{ width: "100%", maxWidth: 560, height: "min(94vh, 860px)", backgroundColor: "#0a0a0c", borderRadius: 16, border: "1px solid rgba(157,255,32,0.2)", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.6)" }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -928,6 +974,10 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
             onSend={sendMessage}
             onConcretar={handleConcretar}
             onBack={() => !isBusy && setStep("assets")}
+            onUseTemplate={() => {
+              setInput(IDEAL_PROMPT);
+              setTimeout(() => inputRef.current?.focus(), 50);
+            }}
           />
         )}
       </div>

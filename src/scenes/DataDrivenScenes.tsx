@@ -136,13 +136,6 @@ function SceneBg({ accentColor = PURPLE, theme = "dark" as ThemeKey }) {
           background: `radial-gradient(circle, ${t.blobSecondary} 0%, transparent 70%)`,
         }}
       />
-      {/* Subtle grid */}
-      <AbsoluteFill
-        style={{
-          backgroundImage: `linear-gradient(${t.gridLine} 1px, transparent 1px), linear-gradient(90deg, ${t.gridLine} 1px, transparent 1px)`,
-          backgroundSize: "80px 80px",
-        }}
-      />
     </>
   );
 }

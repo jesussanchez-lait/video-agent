@@ -22,6 +22,7 @@ export function DashboardClient({
     initialCompositions[0]?.id ?? null
   );
   const [chatOpen, setChatOpen] = useState(false);
+  const [pendingSelectId, setPendingSelectId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [renderingId, setRenderingId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<{ id: string; title: string } | null>(null);
@@ -30,14 +31,19 @@ export function DashboardClient({
   useEffect(() => {
     setCompositions(initialCompositions);
     setSelectedId((prev) => {
+      if (pendingSelectId && initialCompositions.some((c) => c.id === pendingSelectId)) {
+        setPendingSelectId(null);
+        return pendingSelectId;
+      }
       const exists = initialCompositions.some((c) => c.id === prev);
       return exists ? prev : initialCompositions[0]?.id ?? null;
     });
-  }, [initialCompositions]);
+  }, [initialCompositions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCompositionCreated = (compositionId: string) => {
+    setPendingSelectId(compositionId);
+    setChatOpen(false);
     router.refresh();
-    setSelectedId(compositionId);
   };
 
   const handleDownload = async (e: React.MouseEvent, compositionId: string, title: string) => {

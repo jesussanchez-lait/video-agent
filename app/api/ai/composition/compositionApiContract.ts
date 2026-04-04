@@ -85,7 +85,7 @@ Marcador _elevenlabs (dentro de sceneData):
 Música:
   "_elevenlabs": {
     "type": "music",
-    "prompt": "<género, BPM, instrumentos, mood — específico>",
+    "prompt": "<género, BPM, instrumentos, mood — específico. SIEMPRE instrumental, sin voces ni canto>",
     "durationMs": <totalBrutoFrames / 30 * 1000>
   }
 

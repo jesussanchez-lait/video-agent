@@ -114,6 +114,8 @@ export async function POST(request: NextRequest) {
       }
 
       const musicLengthMs = durationMs ?? 10000;
+      // Always enforce instrumental — append constraint so ElevenLabs never adds vocals.
+      const instrumentalPrompt = `${prompt.trim()}, instrumental, no vocals, no singing, no voice`;
       const res = await fetch(
         "https://api.elevenlabs.io/v1/music?output_format=mp3_44100_128",
         {
@@ -123,7 +125,7 @@ export async function POST(request: NextRequest) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            prompt: prompt.trim(),
+            prompt: instrumentalPrompt,
             music_length_ms: Math.min(Math.max(musicLengthMs, 3000), 300000),
             model_id: "music_v1",
           }),
@@ -198,10 +200,13 @@ export async function POST(request: NextRequest) {
     console.log(`[ai/audio] Saving ${type} (${audioBuffer.length} bytes) to gs://${STORAGE_BUCKET}/${storagePath}`);
     try {
       await file.save(audioBuffer, {
-        metadata: {
-          contentType: "audio/mpeg",
-          metadata: { firebaseStorageDownloadTokens: downloadToken },
-        },
+        metadata: { contentType: "audio/mpeg" },
+      });
+      // setMetadata must be called separately — file.save() does not reliably
+      // persist nested custom metadata (firebaseStorageDownloadTokens) in GCS.
+      await file.setMetadata({
+        contentType: "audio/mpeg",
+        metadata: { firebaseStorageDownloadTokens: downloadToken },
       });
       console.log(`[ai/audio] Save OK → ${storagePath}`);
     } catch (saveErr) {
