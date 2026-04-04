@@ -1,6 +1,9 @@
 {
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/api/ai/audio/route": "/api/ai/audio",
+  "/api/ai/composition/route": "/api/ai/composition",
+  "/api/assets/[id]/finalize-upload/route": "/api/assets/[id]/finalize-upload",
   "/api/assets/[id]/route": "/api/assets/[id]",
   "/api/assets/route": "/api/assets",
   "/api/assets/upload-url/route": "/api/assets/upload-url",
@@ -10,6 +13,7 @@
   "/api/compositions/[id]/route": "/api/compositions/[id]",
   "/api/compositions/init/route": "/api/compositions/init",
   "/api/compositions/route": "/api/compositions",
+  "/api/render/[id]/route": "/api/render/[id]",
   "/dashboard/page": "/dashboard",
   "/editor/page": "/editor",
   "/login/page": "/login",

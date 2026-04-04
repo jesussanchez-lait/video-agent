@@ -4,11 +4,11 @@ import React, { useEffect, useCallback } from "react";
 
 export interface ContextMenuItem {
   id: string;
-  label: string;
+  label?: string;
   shortcut?: string;
   disabled?: boolean;
   separator?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const MENU_STYLE: React.CSSProperties = {
@@ -63,7 +63,7 @@ export function ContextMenu({ x, y, items, onClose }: ContextMenuProps) {
   const handleClick = useCallback(
     (item: ContextMenuItem) => {
       if (item.disabled) return;
-      item.onClick();
+      item.onClick?.();
       onClose();
     },
     [onClose]

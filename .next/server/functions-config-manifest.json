@@ -9,6 +9,9 @@
           "originalSource": "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"
         }
       ]
+    },
+    "/api/render/[id]": {
+      "maxDuration": 300
     }
   }
 }

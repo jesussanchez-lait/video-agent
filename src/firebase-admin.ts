@@ -14,29 +14,37 @@ export const FIREBASE_CREDENTIAL_HELP =
   "Si ves 'Invalid JWT Signature' o 'UNAUTHENTICATED': (1) Sincroniza la hora del sistema. (2) Regenera la clave en Firebase Console → Configuración → Cuentas de servicio → Generar nueva clave privada.";
 
 function getCredential() {
-  // 1. GOOGLE_APPLICATION_CREDENTIALS — estándar de Google Cloud
-  const adcPath =
-    process.env.GOOGLE_APPLICATION_CREDENTIALS ??
-    "lait-video-editor-firebase-adminsdk-fbsvc-423ef0596b.json";
+  const adc = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+  // 1. GOOGLE_APPLICATION_CREDENTIALS como JSON inline (App Hosting / Secret Manager)
+  if (adc?.trimStart().startsWith("{")) {
+    try {
+      const parsed = JSON.parse(adc);
+      return cert(parsed);
+    } catch {
+      throw new Error("GOOGLE_APPLICATION_CREDENTIALS contiene JSON inválido.");
+    }
+  }
+
+  // 2. GOOGLE_APPLICATION_CREDENTIALS como ruta a un archivo (desarrollo local)
+  const adcPath = adc ?? "lait-video-editor-firebase-adminsdk-fbsvc-423ef0596b.json";
   const resolvedPath = path.isAbsolute(adcPath)
     ? adcPath
     : path.resolve(process.cwd(), adcPath);
   if (fs.existsSync(resolvedPath)) {
     return cert(resolvedPath);
   }
-  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  if (adc) {
     throw new Error(
       `GOOGLE_APPLICATION_CREDENTIALS apunta a un archivo inexistente: ${resolvedPath}`
     );
   }
 
-  // 2. Archivo de service account (FIREBASE_SERVICE_ACCOUNT_PATH o *-adminsdk-*.json)
-  const candidates = process.env.FIREBASE_SERVICE_ACCOUNT_PATH
-    ? [process.env.FIREBASE_SERVICE_ACCOUNT_PATH]
-    : [
-        "lait-video-editor-firebase-adminsdk-fbsvc-423ef0596b.json",
-        "lait-video-editor-firebase-adminsdk-fbsvc-feeabf3dcd.json",
-      ];
+  // 3. Archivos *-adminsdk-*.json en la raíz del proyecto (fallback local)
+  const candidates = [
+    "lait-video-editor-firebase-adminsdk-fbsvc-423ef0596b.json",
+    "lait-video-editor-firebase-adminsdk-fbsvc-feeabf3dcd.json",
+  ];
   for (const name of candidates) {
     const p = path.join(process.cwd(), name);
     if (fs.existsSync(p)) {
@@ -48,11 +56,11 @@ function getCredential() {
     }
   }
 
-  // 3. Variables de entorno (FIREBASE_PRIVATE_KEY, etc.)
+  // 4. Variables de entorno individuales (FIREBASE_PRIVATE_KEY, etc.)
   const raw = process.env.FIREBASE_PRIVATE_KEY;
   if (!raw) {
     throw new Error(
-      "Configura Firebase Admin: GOOGLE_APPLICATION_CREDENTIALS, el archivo JSON del service account, o FIREBASE_PRIVATE_KEY en .env"
+      "Configura Firebase Admin: GOOGLE_APPLICATION_CREDENTIALS (ruta o JSON), el archivo JSON del service account, o FIREBASE_PRIVATE_KEY en .env"
     );
   }
   const privateKey = raw.replace(/\\n/g, "\n").trim();

@@ -1,0 +1,83 @@
+# Firebase App Hosting — configuración de despliegue
+# Documentación: https://firebase.google.com/docs/app-hosting/configure
+
+runConfig:
+  cpu: 2
+  memoryMiB: 1024
+  concurrency: 40
+  maxInstances: 10
+  minInstances: 0
+
+env:
+  # ── Firebase (cliente) ──────────────────────────────────
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyD35avrv9uT7V9OkbshAa2WHUgg_VicikU
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: lait-video-editor.firebaseapp.com
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: lait-video-editor
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ── Firebase (servidor) ─────────────────────────────────
+  - variable: FIREBASE_PROJECT_ID
+    value: lait-video-editor
+    availability:
+      - RUNTIME
+
+  - variable: FIREBASE_STORAGE_BUCKET
+    value: lait-video-editor.firebasestorage.app
+    availability:
+      - RUNTIME
+
+  # JSON completo del service account (Secret Manager)
+  # Crea el secreto con: gcloud secrets create firebase-service-account --data-file=<ruta-al-json>
+  - variable: GOOGLE_APPLICATION_CREDENTIALS
+    secret: firebase-service-account
+    availability:
+      - RUNTIME
+
+  # ── Remotion Studio ─────────────────────────────────────
+  # En producción apunta a la URL real del studio desplegado
+  - variable: NEXT_PUBLIC_STUDIO_URL
+    value: https://studio.lait-video-editor.web.app
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ── Claude / Anthropic ──────────────────────────────────
+  - variable: ANTHROPIC_COMPOSITION_MODEL
+    value: claude-sonnet-4-6
+    availability:
+      - RUNTIME
+
+  - variable: ANTHROPIC_API_KEY
+    secret: anthropic-api-key
+    availability:
+      - RUNTIME
+
+  # ── ElevenLabs ──────────────────────────────────────────
+  - variable: ELEVENLABS_DEFAULT_VOICE_ID
+    value: 21m00Tcm4TlvDq8ikWAM
+    availability:
+      - RUNTIME
+
+  - variable: ELEVENLABS_API_KEY
+    secret: elevenlabs-api-key
+    availability:
+      - RUNTIME
+
+  # ── Sesión JWT ──────────────────────────────────────────
+  - variable: SESSION_SECRET
+    secret: session-secret
+    availability:
+      - RUNTIME

@@ -30,12 +30,28 @@
       "namedRegex": "^/api/assets/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/assets/[id]/finalize-upload",
+      "regex": "^/api/assets/([^/]+?)/finalize\\-upload(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/assets/(?<nxtPid>[^/]+?)/finalize\\-upload(?:/)?$"
+    },
+    {
       "page": "/api/compositions/[id]",
       "regex": "^/api/compositions/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/compositions/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/render/[id]",
+      "regex": "^/api/render/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/render/(?<nxtPid>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -56,6 +72,18 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/ai/audio",
+      "regex": "^/api/ai/audio(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/ai/audio(?:/)?$"
+    },
+    {
+      "page": "/api/ai/composition",
+      "regex": "^/api/ai/composition(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/ai/composition(?:/)?$"
     },
     {
       "page": "/api/assets",

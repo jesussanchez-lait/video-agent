@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Player } from "@remotion/player";
+import { Player, type PlayerRef } from "@remotion/player";
 import { DynamicComposition } from "../../../src/Composition";
 import { ComponentPalette } from "./ComponentPalette";
 import { Timeline } from "./Timeline";
@@ -45,7 +45,7 @@ export function EditorClient({ composition: initialComposition }: EditorClientPr
     target: ContextMenuTarget;
   } | null>(null);
   const [clipboard, setClipboard] = useState<{ sequence: Sequence; cut: boolean } | null>(null);
-  const playerRef = useRef<ReturnType<typeof Player> | null>(null);
+  const playerRef = useRef<PlayerRef>(null);
 
   const totalDurationInFrames = useMemo(
     () => calcTotalDuration(sequences),

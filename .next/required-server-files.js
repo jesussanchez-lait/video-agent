@@ -157,7 +157,7 @@ self.__SERVER_FILES_MANIFEST={
       "proxyPrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 7,
+      "cpus": 9,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptTimeoutInSeconds": 7,
@@ -297,6 +297,15 @@ self.__SERVER_FILES_MANIFEST={
       "@remotion/player",
       "@remotion/transitions",
       "@remotion/google-fonts"
+    ],
+    "serverExternalPackages": [
+      "@remotion/renderer",
+      "@remotion/bundler",
+      "firebase-admin",
+      "@google-cloud/storage",
+      "@google-cloud/firestore",
+      "@grpc/grpc-js",
+      "@grpc/proto-loader"
     ],
     "turbopack": {
       "root": "/Users/JesusSanchez/Projects/Social Cognitive/Video-Agent"
