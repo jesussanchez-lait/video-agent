@@ -79,7 +79,7 @@ var __turbopack_async_dependencies__ = __turbopack_handle_async_dependencies__([
 ;
 ;
 const PROJECT_ID = process.env.FIREBASE_PROJECT_ID ?? "lait-video-editor";
-const STORAGE_BUCKET = process.env.FIREBASE_STORAGE_BUCKET ?? "lait-video-editor.firebasestorage.app";
+const STORAGE_BUCKET = process.env.FIREBASE_STORAGE_BUCKET?.trim() || "lait-video-editor.firebasestorage.app";
 const FIREBASE_CREDENTIAL_HELP = "Si ves 'Invalid JWT Signature' o 'UNAUTHENTICATED': (1) Sincroniza la hora del sistema. (2) Regenera la clave en Firebase Console → Configuración → Cuentas de servicio → Generar nueva clave privada.";
 function getCredential() {
     // 1. GOOGLE_APPLICATION_CREDENTIALS — estándar de Google Cloud

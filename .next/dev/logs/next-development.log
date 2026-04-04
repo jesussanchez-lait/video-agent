@@ -1,105 +1,11 @@
-[00:00:00.920] Server  LOG     ✓ Ready in 661ms
-[00:01:40.749] Browser ERROR   [MediaPlayer] Failed to recognize format for https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2F131a9e7d-ae41-456a-b007-35574fa58ca9%2Fassets%2Faudio%2Fvoice-e03f6e44-1f37-4222-b360-0bd07a361d5a.mp3?alt=media&token=ada0b998-3b7e-43ce-9314-c24267fde662 {}
-[00:01:40.749] Browser WARN    Unknown container format for https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2F131a9e7d-ae41-456a-b007-35574fa58ca9%2Fassets%2Faudio%2Fvoice-e03f6e44-1f37-4222-b360-0bd07a361d5a.mp3?alt=media&token=ada0b998-3b7e-43ce-9314-c24267fde662 (Supported formats: https://www.remotion.dev/docs/mediabunny/formats), falling back to <Html5Audio>
-[00:02:56.061] Server  ERROR   [ai/audio] ElevenLabs Music error: 401 "{\"detail\":{\"type\":\"payment_required\",\"code\":\"insufficient_credits\",\"message\":\"You have insufficient credits to generate this song. Please upgrade your plan to continue.\",\"status\":\"quota_exceeded\",\"request_id\":\"3213787db9933172920e40efda136200\"}}"
-[00:02:58.444] Server  LOG     [ai/audio] Saving voice (129611 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/c4c54a0e-4e53-4bf4-bee4-36d151b962d5/assets/audio/voice-7e643665-6021-495f-9d65-68e088d5a666.mp3
-[00:03:00.834] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/c4c54a0e-4e53-4bf4-bee4-36d151b962d5/assets/audio/voice-7e643665-6021-495f-9d65-68e088d5a666.mp3
-[00:03:03.596] Server  LOG     [ai/audio] Saving voice (194395 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/c4c54a0e-4e53-4bf4-bee4-36d151b962d5/assets/audio/voice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3
-[00:03:04.413] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/c4c54a0e-4e53-4bf4-bee4-36d151b962d5/assets/audio/voice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3
-[00:03:07.689] Server  LOG     [ai/audio] Saving voice (261686 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/c4c54a0e-4e53-4bf4-bee4-36d151b962d5/assets/audio/voice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3
-[00:03:08.804] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/c4c54a0e-4e53-4bf4-bee4-36d151b962d5/assets/audio/voice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3
-[00:03:09.625] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 142 credits are required for this request.\"}}"
-[00:03:09.794] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 132 credits are required for this request.\"}}"
-[00:03:09.961] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 132 credits are required for this request.\"}}"
-[00:03:10.154] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 164 credits are required for this request.\"}}"
-[00:03:10.317] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 98 credits are required for this request.\"}}"
-[00:04:06.290] Server  ERROR    console.error  "\u001b[31mAccess to fetch at 'https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-7e643665-6021-495f-9d65-68e088d5a666.mp3?alt=media&token=73383005-80e4-4b7e-8522-e0a0e70834b6' from origin 'http://localhost:3002' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.\u001b[39m"
-[00:04:06.290] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-7e643665-6021-495f-9d65-68e088d5a666.mp3?alt=media&token=73383005-80e4-4b7e-8522-e0a0e70834b6 (Fetch): net::ERR_FAILED
-[00:04:06.290] Server  WARN    HTTP status code: 206, headers:
-[00:04:06.291] Server  WARN    {
-  "Content-Length": "129611",
-  "Content-Range": "bytes 0-129610/129611",
-  "accept-ranges": "bytes",
-  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
-  "cache-control": "private, max-age=0",
-  "content-type": "audio/mpeg",
-  "date": "Sat, 28 Mar 2026 03:13:03 GMT",
-  "etag": "\"5e8159a4af2c5f6f47a9213d9d7bb646\"",
-  "expires": "Sat, 28 Mar 2026 03:13:03 GMT",
-  "last-modified": "Sat, 28 Mar 2026 03:11:58 GMT",
-  "server": "UploadServer",
-  "vary": "Origin",
-  "x-goog-generation": "1774667518163431",
-  "x-goog-hash": "crc32c=Bz+Zog==\nmd5=XoFZpK8sX29HqSE9nXu2Rg==",
-  "x-goog-meta-firebasestoragedownloadtokens": "73383005-80e4-4b7e-8522-e0a0e70834b6",
-  "x-goog-metageneration": "1",
-  "x-goog-storage-class": "REGIONAL",
-  "x-goog-stored-content-encoding": "identity",
-  "x-goog-stored-content-length": "129611",
-  "x-guploader-uploadid": "AMNfjG2yGtK_vmqxpWzhTWwyoKEOV6hJ6JnLFRLdK-DAMSmR5_RFy-DJO9Ffl5HRwPq1KdeZvPaBNnQ"
-}
-[00:04:06.291] Server  ERROR    https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-7e643665-6021-495f-9d65-68e088d5a666.mp3?alt=media&token=73383005-80e4-4b7e-8522-e0a0e70834b6  "\u001b[31mFailed to load resource: net::ERR_FAILED\u001b[39m"
-[00:04:06.303] Server  WARN     Tab 0, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-7e643665-6021-495f-9d65-68e088d5a666.mp3?alt=media&token=73383005-80e4-4b7e-8522-e0a0e70834b6, falling back to <Html5Audio>\u001b[39m"
-[00:04:06.303] Server  WARN     Tab 2, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-7e643665-6021-495f-9d65-68e088d5a666.mp3?alt=media&token=73383005-80e4-4b7e-8522-e0a0e70834b6, falling back to <Html5Audio>\u001b[39m"
-[00:04:06.303] Server  WARN     Tab 1, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-7e643665-6021-495f-9d65-68e088d5a666.mp3?alt=media&token=73383005-80e4-4b7e-8522-e0a0e70834b6, falling back to <Html5Audio>\u001b[39m"
-[00:04:06.303] Server  WARN     Tab 3, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-7e643665-6021-495f-9d65-68e088d5a666.mp3?alt=media&token=73383005-80e4-4b7e-8522-e0a0e70834b6, falling back to <Html5Audio>\u001b[39m"
-[00:04:09.955] Server  ERROR    console.error  "\u001b[31mAccess to fetch at 'https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3?alt=media&token=6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087' from origin 'http://localhost:3002' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.\u001b[39m"
-[00:04:09.955] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3?alt=media&token=6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087 (Fetch): net::ERR_FAILED
-[00:04:09.955] Server  WARN    HTTP status code: 206, headers:
-[00:04:09.955] Server  WARN    {
-  "Content-Length": "194395",
-  "Content-Range": "bytes 0-194394/194395",
-  "accept-ranges": "bytes",
-  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
-  "cache-control": "private, max-age=0",
-  "content-type": "audio/mpeg",
-  "date": "Sat, 28 Mar 2026 03:13:07 GMT",
-  "etag": "\"8dde3004bfce39d41058c15be4dba01a\"",
-  "expires": "Sat, 28 Mar 2026 03:13:07 GMT",
-  "last-modified": "Sat, 28 Mar 2026 03:12:01 GMT",
-  "server": "UploadServer",
-  "vary": "Origin",
-  "x-goog-generation": "1774667521861677",
-  "x-goog-hash": "crc32c=ikLFRg==\nmd5=jd4wBL/OOdQQWMFb5NugGg==",
-  "x-goog-meta-firebasestoragedownloadtokens": "6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087",
-  "x-goog-metageneration": "1",
-  "x-goog-storage-class": "REGIONAL",
-  "x-goog-stored-content-encoding": "identity",
-  "x-goog-stored-content-length": "194395",
-  "x-guploader-uploadid": "AMNfjG204kOrvsLZ1wgzUNz7UEGuuvUOAUtok9I0F_Qly7kt15T3-tbBmZqZJ48ok7tbl0UFJQC35QU"
-}
-[00:04:09.955] Server  ERROR    https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3?alt=media&token=6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087  "\u001b[31mFailed to load resource: net::ERR_FAILED\u001b[39m"
-[00:04:09.956] Server  WARN     Tab 0, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3?alt=media&token=6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087, falling back to <Html5Audio>\u001b[39m"
-[00:04:09.956] Server  WARN     Tab 1, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3?alt=media&token=6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087, falling back to <Html5Audio>\u001b[39m"
-[00:04:09.956] Server  WARN     Tab 2, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3?alt=media&token=6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087, falling back to <Html5Audio>\u001b[39m"
-[00:04:09.957] Server  WARN     Tab 3, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-16dea230-d084-43fc-a0fc-efad3ea15ea2.mp3?alt=media&token=6e3ad5eb-1e96-4bb6-b0c5-90dc2e2cd087, falling back to <Html5Audio>\u001b[39m"
-[00:04:14.462] Server  ERROR    console.error  "\u001b[31mAccess to fetch at 'https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3?alt=media&token=a20d802e-d4d5-4bc7-a913-99702cb448ad' from origin 'http://localhost:3002' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.\u001b[39m"
-[00:04:14.462] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3?alt=media&token=a20d802e-d4d5-4bc7-a913-99702cb448ad (Fetch): net::ERR_FAILED
-[00:04:14.463] Server  WARN    HTTP status code: 206, headers:
-[00:04:14.463] Server  WARN    {
-  "Content-Length": "261686",
-  "Content-Range": "bytes 0-261685/261686",
-  "accept-ranges": "bytes",
-  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
-  "cache-control": "private, max-age=0",
-  "content-type": "audio/mpeg",
-  "date": "Sat, 28 Mar 2026 03:13:11 GMT",
-  "etag": "\"aa428527499888d7db9e1a1d44faab49\"",
-  "expires": "Sat, 28 Mar 2026 03:13:11 GMT",
-  "last-modified": "Sat, 28 Mar 2026 03:12:06 GMT",
-  "server": "UploadServer",
-  "vary": "Origin",
-  "x-goog-generation": "1774667526221589",
-  "x-goog-hash": "crc32c=mNgeQw==\nmd5=qkKFJ0mYiNfbnhodRPqrSQ==",
-  "x-goog-meta-firebasestoragedownloadtokens": "a20d802e-d4d5-4bc7-a913-99702cb448ad",
-  "x-goog-metageneration": "1",
-  "x-goog-storage-class": "REGIONAL",
-  "x-goog-stored-content-encoding": "identity",
-  "x-goog-stored-content-length": "261686",
-  "x-guploader-uploadid": "AMNfjG2sYG7e9CgmO2LNgoCm5wcGUe2fhSjVHjBUqkxDR_es-iQVPYdP2EgjJ9fmzwtUV9Bt8zPhDb8"
-}
-[00:04:14.463] Server  ERROR    https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3?alt=media&token=a20d802e-d4d5-4bc7-a913-99702cb448ad  "\u001b[31mFailed to load resource: net::ERR_FAILED\u001b[39m"
-[00:04:14.463] Server  WARN     Tab 0, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3?alt=media&token=a20d802e-d4d5-4bc7-a913-99702cb448ad, falling back to <Html5Audio>\u001b[39m"
-[00:04:14.464] Server  WARN     Tab 2, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3?alt=media&token=a20d802e-d4d5-4bc7-a913-99702cb448ad, falling back to <Html5Audio>\u001b[39m"
-[00:04:14.464] Server  WARN     Tab 3, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3?alt=media&token=a20d802e-d4d5-4bc7-a913-99702cb448ad, falling back to <Html5Audio>\u001b[39m"
-[00:04:14.464] Server  WARN     Tab 1, @remotion/media  "\u001b[33mNetwork error fetching https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fc4c54a0e-4e53-4bf4-bee4-36d151b962d5%2Fassets%2Faudio%2Fvoice-b238e1f0-4aed-40d8-ae63-59b870fa1e78.mp3?alt=media&token=a20d802e-d4d5-4bc7-a913-99702cb448ad, falling back to <Html5Audio>\u001b[39m"
+[00:00:01.342] Server  LOG     ✓ Ready in 1057ms
+[00:09:38.126] Server  LOG     ✓ Compiled in 42ms
+[00:10:19.954] Server  LOG     ✓ Compiled in 25ms
+[00:17:26.578] Server  ERROR   [ai/audio] ElevenLabs Music error: 401 "{\"detail\":{\"type\":\"payment_required\",\"code\":\"insufficient_credits\",\"message\":\"You have insufficient credits to generate this song. Please upgrade your plan to continue.\",\"status\":\"quota_exceeded\",\"request_id\":\"479e0c2c7f16fee73687527f183e7090\"}}"
+[00:17:26.734] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 59 credits are required for this request.\"}}"
+[00:17:26.900] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 168 credits are required for this request.\"}}"
+[00:17:27.069] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 174 credits are required for this request.\"}}"
+[00:17:27.235] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 160 credits are required for this request.\"}}"
+[00:17:27.399] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 175 credits are required for this request.\"}}"
+[00:17:27.563] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 156 credits are required for this request.\"}}"
+[00:17:27.738] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 75 credits are required for this request.\"}}"
