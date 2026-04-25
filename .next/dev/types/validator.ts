@@ -128,6 +128,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../../app/api/assets/upload-direct/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/assets/upload-direct">> = Specific
+  const handler = {} as typeof import("../../../app/api/assets/upload-direct/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/api/assets/upload-url/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/assets/upload-url">> = Specific

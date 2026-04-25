@@ -1,11 +1,441 @@
-[00:00:01.342] Server  LOG     ✓ Ready in 1057ms
-[00:09:38.126] Server  LOG     ✓ Compiled in 42ms
-[00:10:19.954] Server  LOG     ✓ Compiled in 25ms
-[00:17:26.578] Server  ERROR   [ai/audio] ElevenLabs Music error: 401 "{\"detail\":{\"type\":\"payment_required\",\"code\":\"insufficient_credits\",\"message\":\"You have insufficient credits to generate this song. Please upgrade your plan to continue.\",\"status\":\"quota_exceeded\",\"request_id\":\"479e0c2c7f16fee73687527f183e7090\"}}"
-[00:17:26.734] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 59 credits are required for this request.\"}}"
-[00:17:26.900] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 168 credits are required for this request.\"}}"
-[00:17:27.069] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 174 credits are required for this request.\"}}"
-[00:17:27.235] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 160 credits are required for this request.\"}}"
-[00:17:27.399] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 175 credits are required for this request.\"}}"
-[00:17:27.563] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 156 credits are required for this request.\"}}"
-[00:17:27.738] Server  ERROR   [ai/audio] ElevenLabs TTS error: 401 "{\"detail\":{\"status\":\"quota_exceeded\",\"message\":\"This request exceeds your quota of 39683. You have 26 credits remaining, while 75 credits are required for this request.\"}}"
+[00:00:01.184] Server  LOG     ✓ Ready in 1029ms
+[00:00:05.334] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:08.468] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:19.927] Browser WARN    {}
+[00:07:40.957] Server  LOG     ✓ Compiled in 17ms
+[00:07:47.220] Server  LOG     ✓ Compiled in 20ms
+[00:07:58.957] Server  LOG     ✓ Compiled in 19ms
+[00:08:03.575] Server  LOG     ✓ Compiled in 14ms
+[00:08:06.529] Server  LOG     ✓ Compiled in 9ms
+[00:09:32.280] Server  LOG     ✓ Compiled in 13ms
+[00:12:00.020] Server  LOG     [ai/audio] Saving music (831365 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/music-7f0dd32b-3866-40b9-8187-624ca4d26d64.mp3
+[00:12:02.006] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/music-7f0dd32b-3866-40b9-8187-624ca4d26d64.mp3
+[00:12:04.196] Server  LOG     [ai/audio] Saving voice (110385 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-3779f30f-8f81-4009-bbab-7664ac2c394e.mp3
+[00:12:04.980] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-3779f30f-8f81-4009-bbab-7664ac2c394e.mp3
+[00:12:06.767] Server  LOG     [ai/audio] Saving voice (122088 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-8bfc4436-5818-4f14-a46c-3bb28a0b4b22.mp3
+[00:12:07.680] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-8bfc4436-5818-4f14-a46c-3bb28a0b4b22.mp3
+[00:12:09.501] Server  LOG     [ai/audio] Saving voice (118326 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-887d8b1e-5927-4606-ba38-b874696cbfdc.mp3
+[00:12:10.631] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-887d8b1e-5927-4606-ba38-b874696cbfdc.mp3
+[00:12:12.558] Server  LOG     [ai/audio] Saving voice (140896 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-cb2395cc-6782-4841-9566-442b49996191.mp3
+[00:12:13.414] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-cb2395cc-6782-4841-9566-442b49996191.mp3
+[00:12:15.311] Server  LOG     [ai/audio] Saving voice (140896 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-e5960289-2135-4c35-bcc4-67fd0d9a716a.mp3
+[00:12:16.162] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-e5960289-2135-4c35-bcc4-67fd0d9a716a.mp3
+[00:12:18.150] Server  LOG     [ai/audio] Saving voice (163048 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-3b5810ab-7e9f-4f53-b313-65524050e295.mp3
+[00:12:19.305] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-3b5810ab-7e9f-4f53-b313-65524050e295.mp3
+[00:12:20.936] Server  LOG     [ai/audio] Saving voice (102026 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-7b03c9ca-fe98-41c9-9a1e-4f16a01ce1d1.mp3
+[00:12:21.757] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/9ab80caa-ed36-43dc-bef5-5231281c9943/assets/audio/voice-7b03c9ca-fe98-41c9-9a1e-4f16a01ce1d1.mp3
+[00:13:08.787] Browser WARN    {}
+[00:27:45.108] Server  LOG     ✓ Compiled in 28ms
+[00:35:01.214] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:36:49.085] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:37:58.917] Server  ERROR   [ai/audio] ElevenLabs Music error: 400 "{\"detail\":{\"type\":\"invalid_request\",\"code\":\"bad_request\",\"message\":\"Your prompt appears to have violated our Terms of Service. Please try again with a different prompt.\",\"status\":\"bad_prompt\",\"request_id\":\"61fd1431ac3ecbdafc1353ea9e7fb428\",\"data\":{\"prompt_suggestion\":\"Create a political ambient tension track with orchestral strings and electronic undertones, evoking a suspenseful yet sophisticated atmosphere at 75 BPM. The piece should be purely instrumental, dark and cinematic in mood, suitable as background music for a high-stakes news event or election night coverage, without referencing any specific news network or brand.\"}}}"
+[00:38:00.606] Server  LOG     [ai/audio] Saving voice (136298 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-5b74fefb-2d39-4aef-af9e-cdd339f07584.mp3
+[00:38:02.594] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-5b74fefb-2d39-4aef-af9e-cdd339f07584.mp3
+[00:38:04.657] Server  LOG     [ai/audio] Saving voice (150509 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-7cef91f8-9c95-4625-b190-de528adc1b33.mp3
+[00:38:05.953] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-7cef91f8-9c95-4625-b190-de528adc1b33.mp3
+[00:38:08.064] Server  LOG     [ai/audio] Saving voice (174333 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-cb0b4ca4-787a-4251-aab7-e951ae505b79.mp3
+[00:38:09.267] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-cb0b4ca4-787a-4251-aab7-e951ae505b79.mp3
+[00:38:11.563] Server  LOG     [ai/audio] Saving voice (203172 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-d43d35f1-c488-4baa-8d10-aa61555c825b.mp3
+[00:38:12.825] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-d43d35f1-c488-4baa-8d10-aa61555c825b.mp3
+[00:38:15.067] Server  LOG     [ai/audio] Saving voice (205262 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-aa88a304-ea5f-48ca-a875-bf89bb9517b3.mp3
+[00:38:16.332] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-aa88a304-ea5f-48ca-a875-bf89bb9517b3.mp3
+[00:38:18.892] Server  LOG     [ai/audio] Saving voice (188125 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-598cf21c-b4b0-45e2-bca3-42e7c34d7eaa.mp3
+[00:38:20.110] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-598cf21c-b4b0-45e2-bca3-42e7c34d7eaa.mp3
+[00:38:21.695] Server  LOG     [ai/audio] Saving voice (81964 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-162356eb-a599-4340-a6dc-63ae2703d591.mp3
+[00:38:22.731] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/7e2443d9-c425-4d56-b776-44681892ef11/assets/audio/voice-162356eb-a599-4340-a6dc-63ae2703d591.mp3
+[00:38:24.242] Browser WARN    Remotion: The audio with src https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2F7e2443d9-c425-4d56-b776-44681892ef11%2Fassets%2Faudio%2Fvoice-5b74fefb-2d39-4aef-af9e-cdd339f07584.mp3?alt=media&token=fcd23fa5-8a24-4574-94d5-c2d997eea0b4 has changed it's volume. Prefer the callback syntax for setting volume to get better timeline display: https://www.remotion.dev/docs/audio/volume
+[00:39:05.975] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:05.975] Server  WARN    HTTP status code: 404, headers:
+[00:39:05.976] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:34 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:34 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG1sh4i0oz-axoKapKtkRalyPDZKcgdiIpc7E9yhpe8q-2BwXC8lmd1rWbzNsSfoDzhk00qyx80"
+}
+[00:39:05.992] Server  WARN     Tab 3, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:05.993] Server  WARN     Tab 3, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:06.464] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:06.464] Server  WARN    HTTP status code: 404, headers:
+[00:39:06.464] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:34 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:34 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG1gXbtHHafXaYCIGS0a8lcVvtszlTZyPSdTTVH8yoF-PjZMoC2R8232RoLwOlw1XR4saNrTJCk"
+}
+[00:39:06.465] Server  WARN     Tab 1, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:06.466] Server  WARN     Tab 1, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:07.167] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:07.167] Server  WARN    HTTP status code: 404, headers:
+[00:39:07.167] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:35 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:35 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG0j3PXm0Gu1H5ayA3FE00ufJ61t0s6i0mFdMvrwgxRkdp0UjWvvwK5nIUrnRhlgx38"
+}
+[00:39:07.167] Server  WARN     Tab 0, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:07.168] Server  WARN     Tab 0, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:07.821] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:07.821] Server  WARN    HTTP status code: 404, headers:
+[00:39:07.822] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:36 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:36 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG06ZOqL99JgAZVjRM5x62DhZod9xxozRB4ZbYCx-Mfo3tro_-g5CUA8v0ZmtPGqFA5uebkvOug"
+}
+[00:39:07.822] Server  WARN     Tab 4, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:07.823] Server  WARN     Tab 4, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:08.344] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:08.344] Server  WARN    HTTP status code: 404, headers:
+[00:39:08.344] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:36 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:36 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG0MoLxGi3GSHJ1q1uKWkLei_Y_2nKVNh0qU-nUpGpzYcrhDM5p_NveKVX-ECJT4nIsvLyTJFmc"
+}
+[00:39:08.345] Server  WARN     Tab 2, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:08.345] Server  WARN     Tab 2, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:08.870] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:08.870] Server  WARN    HTTP status code: 404, headers:
+[00:39:08.870] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:37 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:37 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG1Jscej0nPQOEtN3S3aS_eQkkqZCB9tYhksRjWq1JH49A-yKKfouRSexCWrgK8IAO1u7ecGZKI"
+}
+[00:39:08.871] Server  WARN     Tab 3, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:09.420] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:09.420] Server  WARN    HTTP status code: 404, headers:
+[00:39:09.420] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:37 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:37 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG1Jyi5Lcci2arF_uZmP-45ASCucFW97aPNcqdn-6iu5Z5VY2yvcm9BKk9vPqYwx8Md1aQtKjBo"
+}
+[00:39:09.420] Server  WARN     Tab 1, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:09.918] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:09.918] Server  WARN    HTTP status code: 404, headers:
+[00:39:09.918] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:38 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:38 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG10YSjkTTSmcBJK6r2kZQWubV1lP4XHt_-MPZxwOQSqY8t_mNCWvIa2GJnOkiu8ve3LmhUr7A8"
+}
+[00:39:09.918] Server  WARN     Tab 0, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:10.444] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:10.444] Server  WARN    HTTP status code: 404, headers:
+[00:39:10.444] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:38 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:38 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3l_XBls3yURQH7hhxbvtYau3fN3Lk78FaUbJKEJaEDaZCOk-IdAThqBQImmIpjd30x-sIbu9U"
+}
+[00:39:10.444] Server  WARN     Tab 4, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:10.967] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:10.967] Server  WARN    HTTP status code: 404, headers:
+[00:39:10.967] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:39 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:39 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3TlNHxUMM6jpkaJJiDDRuwWAxoe-f5RBLBZV5SeSbYwgEIb9YnD70Sv7QidTJcukua0PG50vQ"
+}
+[00:39:10.967] Server  WARN     Tab 2, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:11.673] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:11.673] Server  WARN    HTTP status code: 404, headers:
+[00:39:11.674] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:39 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:39 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG2VnuRifyyYgZnpIh6-f1iWggsiHFH2dt37w7jtQO78_Dn3yuD_HUziTY7MGEBMmGFWQNmeq48"
+}
+[00:39:11.760] Server  ERROR   [Render] Render failed: CancelledError: Error: Error loading image with src: https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e
+[00:39:31.130] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:31.131] Server  WARN    HTTP status code: 404, headers:
+[00:39:31.131] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:52:59 GMT",
+  "expires": "Sat, 25 Apr 2026 12:52:59 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG2EDWxKOzYG7e69EJ5roTkqonE9bq9w-WMmrplxP_AVmJcGJUZHzMj4fGt7jMXU5h6Nn3gxAoE"
+}
+[00:39:31.140] Server  WARN     Tab 0, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:31.140] Server  WARN     Tab 0, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:31.749] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:31.749] Server  WARN    HTTP status code: 404, headers:
+[00:39:31.749] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:00 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:00 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3VM1c8YAVKP04ubxdm73khibmCZrM_-yClkQ_83dd3UfsnRluLzCd5H1vaRJ5MoVVcpkt4FLc"
+}
+[00:39:31.749] Server  WARN     Tab 1, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:31.750] Server  WARN     Tab 1, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:32.206] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:32.206] Server  WARN    HTTP status code: 404, headers:
+[00:39:32.206] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:00 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:00 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3bMBC3u1xGxhrVMHxtmPcJ6T1ntc0EVi2wEOs-gqaC1iV5hkG1BEeCxvmNr1fRwlZdw-E-Ir4"
+}
+[00:39:32.206] Server  WARN     Tab 4, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:32.207] Server  WARN     Tab 4, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:32.986] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:32.986] Server  WARN    HTTP status code: 404, headers:
+[00:39:32.986] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:01 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:01 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3okIwK9xbO0Edly_3lZS3Gq4yNbtI3y9Vp7DeGio006bSUci_dnMKu4PzbPIaON2RfNvOj2e4"
+}
+[00:39:32.987] Server  WARN     Tab 2, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:32.988] Server  WARN     Tab 2, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:33.510] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:33.510] Server  WARN    HTTP status code: 404, headers:
+[00:39:33.510] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:01 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:01 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3JKstc4BZ3JG8PL7c-fZkiZq8TzPZpIO2e26QioohL9SCE2G_WwN1wilIL6hMPDR6tLWhm0v4"
+}
+[00:39:33.510] Server  WARN     Tab 3, node_modules/remotion/dist/esm/index.mjs:5727  "\u001b[33m\u001b[0mEncodingError: The source image cannot be decoded.\u001b[0m\u001b[39m"
+[00:39:33.511] Server  WARN     Tab 3, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms\u001b[39m"
+[00:39:34.120] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:34.121] Server  WARN    HTTP status code: 404, headers:
+[00:39:34.121] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:02 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:02 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG0U3AA1Ejxm_Kay573yGy5CfFiBp6T_MJr8YKixrGjVhTVx-1iv1WJa4y4IZF1KIU2YSdeRgD4"
+}
+[00:39:34.121] Server  WARN     Tab 0, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:34.583] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:34.583] Server  WARN    HTTP status code: 404, headers:
+[00:39:34.583] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:02 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:02 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG36K8NYzjOq1S6SR2HvJWqQ0e6ktZaQMMIkypxGIJ0d_nAJSrFJgNxJ9kcfgBG4LCGGKdoP_gk"
+}
+[00:39:34.584] Server  WARN     Tab 1, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:35.083] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:35.083] Server  WARN    HTTP status code: 404, headers:
+[00:39:35.083] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:03 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:03 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3eSqBV5R19pmVcsXqoSYKz5RbsU9lvKs_BbI_I0uKhCv6yG2Li-Mgr4booAmHPZsW2rpgJI6A"
+}
+[00:39:35.083] Server  WARN     Tab 4, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:35.611] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:35.611] Server  WARN    HTTP status code: 404, headers:
+[00:39:35.611] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:03 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:03 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG0M2nhNQmht0HwwQy22ORIdJc0aCRdqLEYA4Lv2-pJFZ2jbYzTChufxZ8JVbIBHSBzVqRHzgWc"
+}
+[00:39:35.612] Server  WARN     Tab 2, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:36.131] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:36.131] Server  WARN    HTTP status code: 404, headers:
+[00:39:36.131] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:04 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:04 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG1GZhhL0CxrJx9KdLU__2CSEhFsgsmyzKafsid-od8wKfmkN1Uskvx14wlosrmZDRc"
+}
+[00:39:36.132] Server  WARN     Tab 3, node_modules/remotion/dist/esm/index.mjs:5676  "\u001b[33mCould not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms\u001b[39m"
+[00:39:36.656] Server  WARN    Browser failed to load https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e (Image): net::ERR_BLOCKED_BY_ORB
+[00:39:36.657] Server  WARN    HTTP status code: 404, headers:
+[00:39:36.657] Server  WARN    {
+  "access-control-allow-origin": "*",
+  "access-control-expose-headers": "Content-Range, X-Firebase-Storage-XSRF",
+  "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+  "cache-control": "private, max-age=0",
+  "content-length": "65",
+  "content-type": "application/json; charset=UTF-8",
+  "date": "Sat, 25 Apr 2026 12:53:04 GMT",
+  "expires": "Sat, 25 Apr 2026 12:53:04 GMT",
+  "server": "UploadServer",
+  "x-content-type-options": "nosniff",
+  "x-guploader-uploadid": "AMNfjG3gJNMMjuIRaf9fM7M-YZy7SHaRT8yeGSQJmM5G3Cy2_HwKr8hB8jqslciMZZxEc1SkRiTa378"
+}
+[00:39:36.740] Server  ERROR   [Render] Render failed: CancelledError: Error: Error loading image with src: https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e
+[00:40:45.050] Server  LOG     ✓ Compiled in 8ms
+[00:41:02.778] Browser WARN    {}
+[00:41:34.319] Browser WARN    {}
+[00:41:34.319] Browser WARN    {}
+[00:41:34.319] Browser WARN    Could not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms
+[00:41:35.786] Browser WARN    Could not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms
+[00:41:54.567] Browser WARN    {}
+[00:41:55.168] Browser WARN    {}
+[00:41:55.168] Browser WARN    Could not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 1000ms
+[00:41:56.746] Browser WARN    Could not load image with source https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e, retrying again in 2000ms
+[00:41:59.449] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:42:03.182] Server  WARN    [Render] image src unreachable (404), skipping: https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2Fsessions%2Fc1817dd7-4f6d-4d12-a3e1-d6c3ccb98796%2Fimages%2F88eb5090-300f-4f23-ac63-a2548c72a774.webp?alt=media&token=0ce2eb16-e622-43a1-8eb5-5b382be4166e
+[00:42:24.282] Browser WARN    Remotion: The audio with src https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2F9ab80caa-ed36-43dc-bef5-5231281c9943%2Fassets%2Faudio%2Fvoice-3779f30f-8f81-4009-bbab-7664ac2c394e.mp3?alt=media&token=e37358b6-2580-4cd0-a11d-6998f897a186 has changed it's volume. Prefer the callback syntax for setting volume to get better timeline display: https://www.remotion.dev/docs/audio/volume
+[00:50:56.348] Server  LOG     ✓ Compiled in 9ms
+[02:55:30.708] Server  LOG     [ai/audio] Saving music (751953 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/music-86134502-a6fb-4af8-9a67-fbb7ae98a636.mp3
+[02:55:32.383] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/music-86134502-a6fb-4af8-9a67-fbb7ae98a636.mp3
+[02:55:34.459] Server  LOG     [ai/audio] Saving voice (121252 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-961a4d9e-baf7-4a2c-98ca-c3cbec0ce6cc.mp3
+[02:55:35.644] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-961a4d9e-baf7-4a2c-98ca-c3cbec0ce6cc.mp3
+[02:55:37.991] Server  LOG     [ai/audio] Saving voice (167645 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-e9a490d4-b863-47a6-b987-6c368aea44f1.mp3
+[02:55:39.132] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-e9a490d4-b863-47a6-b987-6c368aea44f1.mp3
+[02:55:41.042] Server  LOG     [ai/audio] Saving voice (129611 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-b81addb8-6a7f-4e4e-996b-a0fff4b64c3e.mp3
+[02:55:42.234] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-b81addb8-6a7f-4e4e-996b-a0fff4b64c3e.mp3
+[02:55:44.228] Server  LOG     [ai/audio] Saving voice (152599 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-f8e83c6d-5a12-41c1-8d4c-29fa51336e11.mp3
+[02:55:45.400] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-f8e83c6d-5a12-41c1-8d4c-29fa51336e11.mp3
+[02:55:47.334] Server  LOG     [ai/audio] Saving voice (145911 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-17b54113-f8fb-4df9-ab5f-78e5fd2362fd.mp3
+[02:55:48.531] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-17b54113-f8fb-4df9-ab5f-78e5fd2362fd.mp3
+[02:55:50.675] Server  LOG     [ai/audio] Saving voice (181438 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-56b6beb4-7024-454f-916a-cf2b9cdb530f.mp3
+[02:55:51.897] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-56b6beb4-7024-454f-916a-cf2b9cdb530f.mp3
+[02:55:54.025] Server  LOG     [ai/audio] Saving voice (186035 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-2419d585-b183-4c45-9f27-54966c22b238.mp3
+[02:55:55.312] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-2419d585-b183-4c45-9f27-54966c22b238.mp3
+[02:55:57.150] Server  LOG     [ai/audio] Saving voice (109549 bytes) to gs://lait-video-editor.firebasestorage.app/users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-1273b7cc-2ecc-4e82-8225-ca6e4345295e.mp3
+[02:55:58.351] Server  LOG     [ai/audio] Save OK → users/xDHvG4BJ6kg5izjLTlfQHUA6UFA3/compositions/99490fed-a329-4a14-ba92-a269fb02ea6b/assets/audio/voice-1273b7cc-2ecc-4e82-8225-ca6e4345295e.mp3
+[02:56:00.552] Browser WARN    Remotion: The audio with src https://firebasestorage.googleapis.com/v0/b/lait-video-editor.firebasestorage.app/o/users%2FxDHvG4BJ6kg5izjLTlfQHUA6UFA3%2Fcompositions%2F99490fed-a329-4a14-ba92-a269fb02ea6b%2Fassets%2Faudio%2Fvoice-961a4d9e-baf7-4a2c-98ca-c3cbec0ce6cc.mp3?alt=media&token=bfdab519-3e69-4c17-89fa-3f87cacf7f99 has changed it's volume. Prefer the callback syntax for setting volume to get better timeline display: https://www.remotion.dev/docs/audio/volume

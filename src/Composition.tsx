@@ -100,12 +100,87 @@ function SceneRenderer({ sequence }: { sequence: SequenceType }) {
   }
 }
 
+// ─── Audio layout computation ─────────────────────────────────────────────────
+//
+// Root cause of the cut/overlap bug:
+//
+//   The old approach used `prevEnd` to sequence non-loop tracks: each voice
+//   started at max(anchorFrame, prevEnd). The +60-frame safety buffer added to
+//   each voice's durationInFrames cascaded through prevEnd, pushing every
+//   subsequent voice further and further from its visual anchor. With 6 voices
+//   each with +60f, the last voice started 300+ frames after its scene — past
+//   the composition end — so it never played at all.
+//
+// Fix:
+//   1. Each non-loop track starts exactly at its visual anchor (no prevEnd delay).
+//   2. Its effective durationInFrames = space until the next track starts
+//      (capped at compositionDuration). This is always >= the scene duration,
+//      so voices have room to breathe, and Remotion's hard-cut happens at the
+//      cleanest point: the scene boundary where the next voice begins.
+//   3. Loop tracks (background music) are unaffected.
+
+interface AudioLayoutItem {
+  seq: SequenceType;
+  from: number;
+  effectiveDur: number;
+}
+
+function computeAudioLayout(
+  audioSeqs: SequenceType[],
+  visualSeqs: SequenceType[],
+  visualFromMap: Map<string, number>,
+  compositionDuration: number
+): AudioLayoutItem[] {
+  const result: AudioLayoutItem[] = [];
+
+  const isLoop = (s: SequenceType) =>
+    (s.sceneData as Record<string, unknown>)?.loop === true;
+
+  const anchorFrame = (audio: SequenceType): number => {
+    const anchor = visualSeqs.find((v) => v.order >= audio.order);
+    return anchor ? (visualFromMap.get(anchor.id) ?? 0) : 0;
+  };
+
+  // ── Loop tracks (background music) ──────────────────────────────────────
+  // Start at their visual anchor, fill the rest of the composition.
+  for (const seq of audioSeqs.filter(isLoop)) {
+    const from = anchorFrame(seq);
+    result.push({
+      seq,
+      from,
+      effectiveDur: Math.max(1, compositionDuration - from),
+    });
+  }
+
+  // ── Non-loop tracks (voice / SFX) ────────────────────────────────────────
+  // Sort by anchor frame so we can compute the "space until next track".
+  const nonLoop = audioSeqs
+    .filter((s) => !isLoop(s))
+    .map((seq) => ({ seq, from: anchorFrame(seq) }))
+    .sort((a, b) => a.from - b.from || a.seq.order - b.seq.order);
+
+  for (let i = 0; i < nonLoop.length; i++) {
+    const { seq, from } = nonLoop[i];
+
+    // The next track's anchor is the natural cut-point for the current track.
+    const nextFrom =
+      i < nonLoop.length - 1 ? nonLoop[i + 1].from : compositionDuration;
+
+    // Give this track all the space available until the next one starts.
+    // - If the audio file is shorter than this window, it ends naturally (silence gap).
+    // - If the audio file is longer, Remotion cuts it at the scene boundary —
+    //   which is the cleanest possible cutoff point.
+    // - If two tracks share the same anchor (rare), fall back to the specified dur.
+    const available = Math.min(nextFrom - from, compositionDuration - from);
+    const effectiveDur = available > 0 ? available : seq.durationInFrames;
+
+    result.push({ seq, from, effectiveDur: Math.max(1, effectiveDur) });
+  }
+
+  return result;
+}
+
 // ─── DynamicComposition ───────────────────────────────────────────────────────
-//
-// Audio sequences are rendered as absolute RemotionSequence overlays so they
-// don't affect the TransitionSeries visual timeline. Their `from` frame is
-// computed by finding the first visual sequence whose order >= audio.order.
-//
 
 export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
   sequences = [],
@@ -119,9 +194,10 @@ export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
 
   const { visualSeqs, audioSeqs } = useMemo(() => ({
     visualSeqs: sorted.filter((s) => s.sceneType !== "audio"),
-    audioSeqs: sorted.filter((s) => s.sceneType === "audio"),
+    audioSeqs:  sorted.filter((s) => s.sceneType === "audio"),
   }), [sorted]);
 
+  // Frame at which each visual scene starts in the TransitionSeries timeline.
   const visualFromMap = useMemo(() => {
     const map = new Map<string, number>();
     let acc = 0;
@@ -137,37 +213,11 @@ export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
     return map;
   }, [visualSeqs]);
 
-  const audioFromMap = useMemo(() => {
-    const map = new Map<string, number>();
-
-    // Loop tracks (background music) anchor freely — they fill the whole composition.
-    const loopAudio = audioSeqs.filter(
-      (s) => (s.sceneData as Record<string, unknown>)?.loop === true
-    );
-    for (const audio of loopAudio) {
-      const anchor = visualSeqs.find((v) => v.order >= audio.order);
-      map.set(audio.id, anchor ? (visualFromMap.get(anchor.id) ?? 0) : 0);
-    }
-
-    // Non-loop tracks (voice / SFX) are sequenced strictly: each one starts
-    // at max(its visual anchor, end of previous non-loop track) so they never overlap.
-    const nonLoopAudio = audioSeqs
-      .filter((s) => (s.sceneData as Record<string, unknown>)?.loop !== true)
-      .map((audio) => {
-        const anchor = visualSeqs.find((v) => v.order >= audio.order);
-        return { audio, anchorFrame: anchor ? (visualFromMap.get(anchor.id) ?? 0) : 0 };
-      })
-      .sort((a, b) => a.anchorFrame - b.anchorFrame || a.audio.order - b.audio.order);
-
-    let prevEnd = 0;
-    for (const { audio, anchorFrame } of nonLoopAudio) {
-      const from = Math.max(anchorFrame, prevEnd);
-      map.set(audio.id, from);
-      prevEnd = from + audio.durationInFrames;
-    }
-
-    return map;
-  }, [audioSeqs, visualSeqs, visualFromMap]);
+  // Audio layout: from-frame + effectiveDur for every audio track.
+  const audioLayout = useMemo(
+    () => computeAudioLayout(audioSeqs, visualSeqs, visualFromMap, compositionDuration),
+    [audioSeqs, visualSeqs, visualFromMap, compositionDuration]
+  );
 
   if (sorted.length === 0) {
     return (
@@ -184,6 +234,9 @@ export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
       </AbsoluteFill>
     );
   }
+
+  const MUSIC_MAX_VOLUME  = 0.12;
+  const VOICE_DEFAULT_VOL = 0.9;
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#10171d" }}>
@@ -208,23 +261,17 @@ export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
       </TransitionSeries>
 
       {/* ── Audio layer ── */}
-      {audioSeqs.map((seq) => {
-        const from = audioFromMap.get(seq.id) ?? 0;
+      {audioLayout.map(({ seq, from, effectiveDur }) => {
         const data = seq.sceneData as Record<string, unknown>;
-        if (!data?.src) return null; // Skip audio sequences with no resolved src
+        if (!data?.src) return null; // No URL yet — skip silently
+
         const isLoop = data?.loop === true;
-
-        // Loop tracks = background music: fill composition + enforce low volume
-        // so the voice-over is always intelligible regardless of agent output.
-        const MUSIC_MAX_VOLUME = 0.12;
-        const VOICE_DEFAULT_VOLUME = 0.9;
-
         const agentVolume = typeof data?.volume === "number" ? data.volume : undefined;
+
+        // Music is always capped at MUSIC_MAX_VOLUME so the voice-over stays clear.
         const enforcedVolume = isLoop
           ? Math.min(agentVolume ?? MUSIC_MAX_VOLUME, MUSIC_MAX_VOLUME)
-          : (agentVolume ?? VOICE_DEFAULT_VOLUME);
-
-        const dur = isLoop ? compositionDuration - from : seq.durationInFrames;
+          : (agentVolume ?? VOICE_DEFAULT_VOL);
 
         const seqWithVolume: typeof seq = {
           ...seq,
@@ -235,7 +282,7 @@ export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
           <RemotionSequence
             key={seq.id}
             from={from}
-            durationInFrames={Math.max(1, dur)}
+            durationInFrames={effectiveDur}
             layout="none"
           >
             <MediaScene sequence={seqWithVolume} />

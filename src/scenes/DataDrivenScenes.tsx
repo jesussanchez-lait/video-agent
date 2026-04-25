@@ -46,28 +46,28 @@ const THEMES = {
   dark: {
     bg:          DARK,
     text:        WHITE,
-    textSub:     "rgba(255,255,255,0.72)",
-    textMuted:   "rgba(255,255,255,0.38)",
-    card:        "rgba(77,77,95,0.14)",
-    cardBorder:  (accent: string) => `${accent}44`,
-    rowCard:     "rgba(77,77,95,0.14)",
-    rowBorder:   "rgba(255,255,255,0.07)",
-    gridLine:    "rgba(255,255,255,0.04)",
-    blobPrimary: (c: string) => `${c}28`,
-    blobSecondary: `${FUSCHIA}1e`,
+    textSub:     "rgba(255,255,255,0.80)",
+    textMuted:   "rgba(255,255,255,0.45)",
+    card:        "rgba(77,77,95,0.18)",
+    cardBorder:  (accent: string) => `${accent}55`,
+    rowCard:     "rgba(77,77,95,0.18)",
+    rowBorder:   "rgba(255,255,255,0.09)",
+    gridLine:    "rgba(255,255,255,0.06)",
+    blobPrimary: (c: string) => `${c}35`,
+    blobSecondary: `${FUSCHIA}28`,
   },
   light: {
     bg:          WHITE,
     text:        DARK,
-    textSub:     "rgba(16,23,29,0.62)",
-    textMuted:   "rgba(16,23,29,0.36)",
-    card:        "rgba(92,89,202,0.06)",
-    cardBorder:  (accent: string) => `${accent}30`,
-    rowCard:     "rgba(92,89,202,0.05)",
-    rowBorder:   "rgba(92,89,202,0.14)",
-    gridLine:    "rgba(16,23,29,0.055)",
-    blobPrimary: (c: string) => `${c}1a`,
-    blobSecondary: `${FUSCHIA}14`,
+    textSub:     "rgba(16,23,29,0.70)",
+    textMuted:   "rgba(16,23,29,0.42)",
+    card:        "rgba(92,89,202,0.07)",
+    cardBorder:  (accent: string) => `${accent}38`,
+    rowCard:     "rgba(92,89,202,0.06)",
+    rowBorder:   "rgba(92,89,202,0.16)",
+    gridLine:    "rgba(16,23,29,0.07)",
+    blobPrimary: (c: string) => `${c}22`,
+    blobSecondary: `${FUSCHIA}18`,
   },
 } as const satisfies Record<ThemeKey, object>;
 
@@ -76,26 +76,38 @@ function getTheme(sceneData: unknown): ThemeKey {
   return d?.theme === "light" ? "light" : "dark";
 }
 
-// ─── Layout constants ─────────────────────────────────────────────────────────
-// Canvas 1080 × 1920. Content lives in the central 60% of height.
+// ─── Layout — full-canvas 1080 × 1920 ────────────────────────────────────────
+// Content occupies the central 82% of height. Top/bottom strips hold branding.
 
-const PAD_X         = 60;
-const ZONE_TOP_PCT  = "20%"; // 20% top → 60% height → 20% bottom
-const ZONE_HEIGHT   = "60%";
+const PAD_X        = 56;
+const ZONE_TOP     = "9%";   // 172px — room for top badge
+const ZONE_HEIGHT  = "82%";  // 1574px — fills the reel
+const STRIP_TOP    = 60;     // top badge y-position
+const STRIP_BOTTOM = 56;     // bottom watermark y-position
 
 // ─── Animation helpers ────────────────────────────────────────────────────────
 
-const spr = (frame: number, delay = 0, cfg: { damping?: number; stiffness?: number } = {}) =>
-  spring({ frame: frame - delay, fps: 30, config: { damping: 14, stiffness: 100, ...cfg } });
+const spr = (frame: number, delay = 0, cfg: { damping?: number; stiffness?: number; mass?: number } = {}) =>
+  spring({ frame: frame - delay, fps: 30, config: { damping: 14, stiffness: 110, ...cfg } });
 
-const fadeIn = (f: number, start: number, dur = 20) =>
+const sprSmooth = (frame: number, delay = 0) =>
+  spring({ frame: frame - delay, fps: 30, config: { damping: 200 } });
+
+const fadeIn = (f: number, start: number, dur = 18) =>
   interpolate(f, [start, start + dur], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-const slideUp = (f: number, start: number, distance = 50) =>
-  interpolate(f, [start, start + 25], [distance, 0], {
+const slideUp = (f: number, start: number, distance = 60) =>
+  interpolate(f, [start, start + 22], [distance, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
+  });
+
+const slideIn = (f: number, start: number, distance = 80) =>
+  interpolate(f, [start, start + 22], [distance, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.exp),
   });
 
 const easeOut = (f: number, start: number, end: number, from: number, to: number) =>
@@ -105,42 +117,66 @@ const easeOut = (f: number, start: number, end: number, from: number, to: number
     easing: Easing.out(Easing.cubic),
   });
 
+const scaleIn = (frame: number, delay = 0) => {
+  const s = spr(frame, delay, { damping: 12, stiffness: 100 });
+  return interpolate(s, [0, 1], [0.55, 1]);
+};
+
 // ─── Shared background ────────────────────────────────────────────────────────
 
 function SceneBg({ accentColor = PURPLE, theme = "dark" as ThemeKey }) {
   const t = THEMES[theme];
+  const frame = useCurrentFrame();
+  // Subtle slow drift animation for the blobs
+  const drift = interpolate(frame, [0, 300], [0, 12], { extrapolateRight: "clamp" });
   return (
     <>
       <AbsoluteFill style={{ backgroundColor: t.bg }} />
-      {/* Accent blob — top-left */}
+      {/* Primary accent blob — top-left, large */}
       <div
         style={{
           position: "absolute",
-          top: -160,
-          left: -120,
-          width: 680,
-          height: 680,
+          top: -200 + drift,
+          left: -180,
+          width: 900,
+          height: 900,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${t.blobPrimary(accentColor)} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${t.blobPrimary(accentColor)} 0%, transparent 68%)`,
+          pointerEvents: "none",
         }}
       />
       {/* Fuschia blob — bottom-right */}
       <div
         style={{
           position: "absolute",
-          bottom: -160,
-          right: -120,
-          width: 580,
-          height: 580,
+          bottom: -200 - drift * 0.5,
+          right: -160,
+          width: 760,
+          height: 760,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${t.blobSecondary} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${t.blobSecondary} 0%, transparent 68%)`,
+          pointerEvents: "none",
+        }}
+      />
+      {/* Subtle center glow */}
+      <div
+        style={{
+          position: "absolute",
+          top: "35%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${accentColor}0a 0%, transparent 70%)`,
+          pointerEvents: "none",
         }}
       />
     </>
   );
 }
 
-// ─── ContentZone ─────────────────────────────────────────────────────────────
+// ─── ContentZone — fills 82% of height ───────────────────────────────────────
 
 function ContentZone({
   children,
@@ -155,7 +191,7 @@ function ContentZone({
     <div
       style={{
         position: "absolute",
-        top: ZONE_TOP_PCT,
+        top: ZONE_TOP,
         left: PAD_X,
         right: PAD_X,
         height: ZONE_HEIGHT,
@@ -177,21 +213,24 @@ function GlassCard({
   style,
   accentColor = PURPLE,
   theme = "dark" as ThemeKey,
+  glow = false,
 }: {
   children: React.ReactNode;
   style?: React.CSSProperties;
   accentColor?: string;
   theme?: ThemeKey;
+  glow?: boolean;
 }) {
   const t = THEMES[theme];
   return (
     <div
       style={{
         background: t.card,
-        border: `1.5px solid ${t.cardBorder(accentColor)}`,
-        borderRadius: 24,
-        padding: "32px 36px",
-        backdropFilter: theme === "dark" ? "blur(12px)" : undefined,
+        border: `2px solid ${t.cardBorder(accentColor)}`,
+        borderRadius: 28,
+        padding: "36px 40px",
+        backdropFilter: theme === "dark" ? "blur(16px)" : undefined,
+        boxShadow: glow ? `0 0 48px ${accentColor}22, 0 8px 32px rgba(0,0,0,0.18)` : "0 4px 24px rgba(0,0,0,0.10)",
         ...style,
       }}
     >
@@ -202,9 +241,25 @@ function GlassCard({
 
 // ─── ScIcon ───────────────────────────────────────────────────────────────────
 
-function ScIcon({ icon, size = 36, color }: { icon: string; size?: number; color: string }) {
+function ScIcon({ icon, size = 40, color }: { icon: string; size?: number; color: string }) {
   if (!icon) return null;
   return <Icon icon={icon} style={{ width: size, height: size, color, display: "block" }} />;
+}
+
+// ─── AccentLine ──────────────────────────────────────────────────────────────
+
+function AccentLine({ frame, delay = 0, accent = PURPLE, width = 200 }: {
+  frame: number; delay?: number; accent?: string; width?: number;
+}) {
+  const w = easeOut(frame, delay, delay + 30, 0, width);
+  return (
+    <div style={{
+      width: w,
+      height: 5,
+      background: `linear-gradient(90deg, ${accent}, ${FUSCHIA})`,
+      borderRadius: 3,
+    }} />
+  );
 }
 
 // ─── SceneTitle ───────────────────────────────────────────────────────────────
@@ -216,6 +271,8 @@ function SceneTitle({
   ty = 0,
   center = false,
   theme = "dark" as ThemeKey,
+  accentColor = PURPLE,
+  frame = 0,
 }: {
   title?: string;
   subtitle?: string;
@@ -223,21 +280,24 @@ function SceneTitle({
   ty?: number;
   center?: boolean;
   theme?: ThemeKey;
+  accentColor?: string;
+  frame?: number;
 }) {
   if (!title && !subtitle) return null;
   const t = THEMES[theme];
   return (
-    <div style={{ opacity: op, transform: `translateY(${ty}px)`, textAlign: center ? "center" : "left", marginBottom: 8 }}>
+    <div style={{ opacity: op, transform: `translateY(${ty}px)`, textAlign: center ? "center" : "left", marginBottom: 12 }}>
       {title && (
-        <div style={{ fontSize: 52, fontWeight: 800, color: t.text, lineHeight: 1.1, letterSpacing: -1, marginBottom: subtitle ? 10 : 0 }}>
+        <div style={{ fontSize: 68, fontWeight: 900, color: t.text, lineHeight: 1.05, letterSpacing: -2, marginBottom: subtitle ? 14 : 0 }}>
           {title}
         </div>
       )}
       {subtitle && (
-        <div style={{ fontSize: 26, fontWeight: 500, color: t.textSub, lineHeight: 1.3 }}>
+        <div style={{ fontSize: 34, fontWeight: 500, color: t.textSub, lineHeight: 1.3, marginBottom: 6 }}>
           {subtitle}
         </div>
       )}
+      <AccentLine frame={frame} delay={8} accent={accentColor} width={center ? 180 : 220} />
     </div>
   );
 }
@@ -252,15 +312,16 @@ function ChangeBadge({ change, positive = true }: { change: string; positive?: b
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 6,
-        background: `${color}18`,
-        border: `1.5px solid ${color}44`,
+        gap: 8,
+        background: `${color}1c`,
+        border: `2px solid ${color}55`,
         borderRadius: 50,
-        padding: "6px 18px",
+        padding: "10px 24px",
+        boxShadow: `0 0 20px ${color}22`,
       }}
     >
-      <Icon icon={arrow} style={{ width: 18, height: 18, color }} />
-      <span style={{ color, fontSize: 20, fontWeight: 700 }}>{change}</span>
+      <Icon icon={arrow} style={{ width: 22, height: 22, color }} />
+      <span style={{ color, fontSize: 26, fontWeight: 800, letterSpacing: 0.3 }}>{change}</span>
     </div>
   );
 }
@@ -286,13 +347,13 @@ export function ScIntroScene({ sequence }: { sequence: Sequence }) {
   const t      = THEMES[theme];
   const accent = data.accentColor ?? PURPLE;
 
-  const logoS    = spr(frame, 0, { damping: 10, stiffness: 80 });
-  const logoScale = interpolate(logoS, [0, 1], [0.5, 1]);
-  const logoOp    = interpolate(logoS, [0, 1], [0, 1]);
-  const titleOp   = fadeIn(frame, 18);
-  const titleY    = slideUp(frame, 18);
-  const subOp     = fadeIn(frame, 30);
-  const periodOp  = fadeIn(frame, 8);
+  const logoS      = spr(frame, 0, { damping: 11, stiffness: 85 });
+  const logoScale  = interpolate(logoS, [0, 1], [0.4, 1]);
+  const logoOp     = interpolate(logoS, [0, 1], [0, 1]);
+  const titleOp    = fadeIn(frame, 16);
+  const titleY     = slideUp(frame, 16, 70);
+  const subOp      = fadeIn(frame, 28, 20);
+  const periodOp   = fadeIn(frame, 6, 15);
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
@@ -302,15 +363,15 @@ export function ScIntroScene({ sequence }: { sequence: Sequence }) {
         <div
           style={{
             position: "absolute",
-            top: 72,
+            top: STRIP_TOP,
             right: PAD_X,
             opacity: periodOp,
-            background: `${accent}18`,
-            border: `1px solid ${accent}44`,
+            background: theme === "dark" ? `${accent}22` : `${accent}15`,
+            border: `2px solid ${accent}55`,
             borderRadius: 50,
-            padding: "10px 24px",
-            fontSize: 20,
-            fontWeight: 600,
+            padding: "12px 30px",
+            fontSize: 24,
+            fontWeight: 700,
             color: theme === "light" ? accent : WHITE,
             letterSpacing: 0.5,
           }}
@@ -320,55 +381,57 @@ export function ScIntroScene({ sequence }: { sequence: Sequence }) {
       )}
 
       <ContentZone center>
-        <div style={{ opacity: logoOp, transform: `scale(${logoScale})`, marginBottom: 28 }}>
-          <Img src={staticFile("logo.webp")} style={{ width: 180, height: "auto", objectFit: "contain" }} />
+        {/* Logo */}
+        <div style={{ opacity: logoOp, transform: `scale(${logoScale})`, marginBottom: 40 }}>
+          <Img src={staticFile("logo.webp")} style={{ width: 220, height: "auto", objectFit: "contain" }} />
         </div>
 
+        {/* Title */}
         <div
           style={{
             opacity: titleOp,
             transform: `translateY(${titleY}px)`,
-            fontSize: 58,
+            fontSize: 76,
             fontWeight: 900,
             color: t.text,
-            lineHeight: 1.1,
-            letterSpacing: -1.5,
-            marginBottom: data.subtitle ? 20 : 0,
+            lineHeight: 1.0,
+            letterSpacing: -2.5,
+            marginBottom: data.subtitle ? 24 : 36,
           }}
         >
           {data.title}
         </div>
 
         {data.subtitle && (
-          <div style={{ opacity: subOp, fontSize: 30, fontWeight: 500, color: t.textSub, lineHeight: 1.4, marginBottom: 28 }}>
+          <div style={{
+            opacity: subOp,
+            fontSize: 38,
+            fontWeight: 500,
+            color: t.textSub,
+            lineHeight: 1.4,
+            marginBottom: 36,
+          }}>
             {data.subtitle}
           </div>
         )}
 
-        <div
-          style={{
-            width: easeOut(frame, 20, 50, 0, 160),
-            height: 4,
-            background: `linear-gradient(90deg, ${accent}, ${FUSCHIA})`,
-            borderRadius: 2,
-            marginTop: data.subtitle ? 0 : 24,
-          }}
-        />
+        {/* Animated accent bar */}
+        <AccentLine frame={frame} delay={22} accent={accent} width={220} />
       </ContentZone>
 
       <div
         style={{
           position: "absolute",
-          bottom: 64,
+          bottom: STRIP_BOTTOM,
           left: 0,
           right: 0,
           display: "flex",
           justifyContent: "center",
-          opacity: fadeIn(frame, 40),
-          fontSize: 18,
-          fontWeight: 600,
+          opacity: fadeIn(frame, 36),
+          fontSize: 22,
+          fontWeight: 700,
           color: t.textMuted,
-          letterSpacing: 3,
+          letterSpacing: 4,
           textTransform: "uppercase",
         }}
       >
@@ -379,7 +442,7 @@ export function ScIntroScene({ sequence }: { sequence: Sequence }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// StatHeroScene
+// StatHeroScene  — el número más grande, impactante, en pantalla completa
 // ─────────────────────────────────────────────────────────────────────────────
 
 function getStatHeroData(s: Sequence): StatHeroData {
@@ -403,55 +466,68 @@ export function StatHeroScene({ sequence }: { sequence: Sequence }) {
   const t      = THEMES[theme];
   const accent = data.accentColor ?? PURPLE;
 
-  const iconS      = spr(frame, 0, { damping: 12, stiffness: 90 });
-  const iconScale  = interpolate(iconS, [0, 1], [0.3, 1]);
+  const iconS      = spr(frame, 0, { damping: 11, stiffness: 90 });
+  const iconScale  = interpolate(iconS, [0, 1], [0.25, 1]);
   const iconOp     = interpolate(iconS, [0, 1], [0, 1]);
-  const valueOp    = fadeIn(frame, 10);
-  const valueScale = interpolate(spr(frame, 10, { damping: 10 }), [0, 1], [0.7, 1]);
-  const labelOp    = fadeIn(frame, 22);
-  const labelY     = slideUp(frame, 22);
-  const changeOp   = fadeIn(frame, 32);
-  const contextOp  = fadeIn(frame, 40);
-  const fadeOutOp  = interpolate(frame, [durationInFrames - 15, durationInFrames - 3], [1, 0], {
+
+  const valueS     = spr(frame, 8, { damping: 12, stiffness: 95 });
+  const valueScale = interpolate(valueS, [0, 1], [0.6, 1]);
+  const valueOp    = interpolate(valueS, [0, 1], [0, 1]);
+
+  const labelOp    = fadeIn(frame, 20);
+  const labelY     = slideUp(frame, 20, 50);
+  const changeOp   = fadeIn(frame, 30);
+  const contextOp  = fadeIn(frame, 38);
+
+  const fadeOutOp  = interpolate(frame, [durationInFrames - 18, durationInFrames - 4], [1, 0], {
     extrapolateLeft: "clamp", extrapolateRight: "clamp",
   });
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
       <SceneBg accentColor={accent} theme={theme} />
-      <ContentZone center style={{ gap: 24, opacity: fadeOutOp }}>
+      <ContentZone center style={{ gap: 28, opacity: fadeOutOp }}>
         {data.icon && (
           <div
             style={{
               opacity: iconOp,
               transform: `scale(${iconScale})`,
-              background: `${accent}18`,
-              border: `1.5px solid ${accent}44`,
-              borderRadius: 32,
-              padding: 28,
-              boxShadow: `0 0 60px ${accent}33`,
+              background: theme === "dark" ? `${accent}1e` : `${accent}18`,
+              border: `2px solid ${accent}55`,
+              borderRadius: 40,
+              padding: 36,
+              boxShadow: `0 0 80px ${accent}44`,
             }}
           >
-            <ScIcon icon={data.icon} size={80} color={accent} />
+            <ScIcon icon={data.icon} size={100} color={accent} />
           </div>
         )}
 
+        {/* HUGE number — the hero moment */}
         <div
           style={{
             opacity: valueOp,
             transform: `scale(${valueScale})`,
-            fontSize: 144,
+            fontSize: 200,
             fontWeight: 900,
             color: theme === "light" ? accent : WHITE,
-            lineHeight: 1,
-            letterSpacing: -4,
-            textShadow: `0 0 80px ${accent}33`,
+            lineHeight: 0.9,
+            letterSpacing: -8,
+            textShadow: `0 0 120px ${accent}44`,
           }}
         >
           {data.value}
         </div>
 
-        <div style={{ opacity: labelOp, transform: `translateY(${labelY}px)`, fontSize: 34, fontWeight: 600, color: t.textSub, letterSpacing: 0.3 }}>
+        <div style={{
+          opacity: labelOp,
+          transform: `translateY(${labelY}px)`,
+          fontSize: 44,
+          fontWeight: 700,
+          color: t.textSub,
+          letterSpacing: 0.2,
+          textAlign: "center",
+        }}>
           {data.label}
         </div>
 
@@ -462,7 +538,7 @@ export function StatHeroScene({ sequence }: { sequence: Sequence }) {
         )}
 
         {data.context && (
-          <div style={{ opacity: contextOp, fontSize: 22, color: t.textMuted, fontWeight: 500 }}>
+          <div style={{ opacity: contextOp, fontSize: 28, color: t.textMuted, fontWeight: 500 }}>
             {data.context}
           </div>
         )}
@@ -494,6 +570,7 @@ export function StatGridScene({ sequence }: { sequence: Sequence }) {
 
   const d        = sequence.sceneData as Record<string, unknown>;
   const subtitle = typeof d.subtitle === "string" ? d.subtitle : data.period;
+  const accent   = typeof d.accentColor === "string" ? d.accentColor : PURPLE;
 
   const titleOp = fadeIn(frame, 0);
   const titleY  = slideUp(frame, 0);
@@ -501,33 +578,49 @@ export function StatGridScene({ sequence }: { sequence: Sequence }) {
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
-      <SceneBg theme={theme} />
-      <ContentZone style={{ gap: 28 }}>
-        <SceneTitle title={data.title} subtitle={subtitle} op={titleOp} ty={titleY} theme={theme} />
+      <SceneBg accentColor={accent} theme={theme} />
+      <ContentZone style={{ gap: 32 }}>
+        <SceneTitle title={data.title} subtitle={subtitle} op={titleOp} ty={titleY} theme={theme} accentColor={accent} frame={frame} />
 
-        <div style={{ flex: 1, display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 20, alignContent: "center" }}>
+        <div style={{ flex: 1, display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 24, alignContent: "center" }}>
           {items.map((item: Record<string, unknown>, i: number) => {
-            const cardS  = spr(frame, 10 + i * 8);
+            const cardS  = spr(frame, 12 + i * 9, { damping: 12, stiffness: 95 });
             const cardOp = interpolate(cardS, [0, 1], [0, 1]);
-            const cardY  = interpolate(cardS, [0, 1], [40, 0]);
-            const accent = typeof item.color === "string" ? item.color : COLORS[i % COLORS.length];
+            const cardY  = interpolate(cardS, [0, 1], [60, 0]);
+            const itemAccent = typeof item.color === "string" ? item.color : COLORS[i % COLORS.length];
 
             return (
               <GlassCard
                 key={i}
-                accentColor={accent}
+                accentColor={itemAccent}
                 theme={theme}
-                style={{ opacity: cardOp, transform: `translateY(${cardY}px)`, display: "flex", flexDirection: "column", gap: 16, justifyContent: "center" }}
+                glow
+                style={{
+                  opacity: cardOp,
+                  transform: `translateY(${cardY}px)`,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 18,
+                  justifyContent: "center",
+                  flex: 1,
+                }}
               >
                 {typeof item.icon === "string" && (
-                  <div style={{ background: `${accent}18`, border: `1px solid ${accent}33`, borderRadius: 16, padding: 14, width: "fit-content" }}>
-                    <ScIcon icon={item.icon} size={36} color={accent} />
+                  <div style={{
+                    background: `${itemAccent}1e`,
+                    border: `1.5px solid ${itemAccent}44`,
+                    borderRadius: 20,
+                    padding: 18,
+                    width: "fit-content",
+                    boxShadow: `0 0 28px ${itemAccent}22`,
+                  }}>
+                    <ScIcon icon={item.icon} size={44} color={itemAccent} />
                   </div>
                 )}
-                <div style={{ fontSize: 64, fontWeight: 900, color: theme === "light" ? accent : WHITE, lineHeight: 1, letterSpacing: -2 }}>
+                <div style={{ fontSize: 88, fontWeight: 900, color: theme === "light" ? itemAccent : WHITE, lineHeight: 0.9, letterSpacing: -3 }}>
                   {String(item.value ?? "")}
                 </div>
-                <div style={{ fontSize: 22, fontWeight: 500, color: t.textSub }}>
+                <div style={{ fontSize: 28, fontWeight: 600, color: t.textSub, lineHeight: 1.2 }}>
                   {String(item.label ?? "")}
                 </div>
                 {typeof item.change === "string" && (
@@ -566,7 +659,10 @@ export function BarChartScene({ sequence }: { sequence: Sequence }) {
   const maxVal = data.maxValue ?? Math.max(...bars.map((b: Record<string, unknown>) => Number(b.value ?? 0)), 1);
   const unit   = data.unit ?? "";
 
-  const CHART_HEIGHT = 400;
+  const d = sequence.sceneData as Record<string, unknown>;
+  const accent = typeof d.accentColor === "string" ? d.accentColor : PURPLE;
+
+  const CHART_HEIGHT = 560;
   const COLORS = [PURPLE, FUSCHIA, "#7c6fe8", "#e8398e", "#9f9de8", "#f06090", PURPLE];
 
   const titleOp = fadeIn(frame, 0);
@@ -574,13 +670,13 @@ export function BarChartScene({ sequence }: { sequence: Sequence }) {
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
-      <SceneBg theme={theme} />
-      <ContentZone style={{ gap: 28 }}>
-        <SceneTitle title={data.title} subtitle={data.subtitle} op={titleOp} ty={titleY} theme={theme} />
+      <SceneBg accentColor={accent} theme={theme} />
+      <ContentZone style={{ gap: 32 }}>
+        <SceneTitle title={data.title} subtitle={data.subtitle} op={titleOp} ty={titleY} theme={theme} accentColor={accent} frame={frame} />
 
-        <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 16, position: "relative" }}>
+        <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 14, position: "relative" }}>
           {/* Grid lines */}
-          <div style={{ position: "absolute", inset: 0, bottom: 52 }}>
+          <div style={{ position: "absolute", inset: 0, bottom: 60 }}>
             {[0.25, 0.5, 0.75, 1].map((ratio) => (
               <div key={ratio} style={{ position: "absolute", bottom: `${ratio * 100}%`, left: 0, right: 0, height: 1, background: t.gridLine }} />
             ))}
@@ -588,27 +684,30 @@ export function BarChartScene({ sequence }: { sequence: Sequence }) {
 
           {bars.map((bar: Record<string, unknown>, i: number) => {
             const val      = Number(bar.value ?? 0);
-            const progress = easeOut(frame, 15 + i * 5, 50 + i * 5, 0, 1);
-            const heightPx = (val / maxVal) * CHART_HEIGHT * progress;
+            const barSpring = spr(frame, 10 + i * 5, { damping: 18, stiffness: 90 });
+            const heightPx = (val / maxVal) * CHART_HEIGHT * barSpring;
             const color    = typeof bar.color === "string" ? bar.color : COLORS[i % COLORS.length];
-            const labelOp  = fadeIn(frame, 35 + i * 5);
+            const labelOp  = fadeIn(frame, 28 + i * 5);
+            const isTop    = val === maxVal;
 
             return (
-              <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 10, height: CHART_HEIGHT + 60, justifyContent: "flex-end" }}>
-                <div style={{ opacity: labelOp, fontSize: 20, fontWeight: 800, color: theme === "light" ? color : WHITE, marginBottom: 6 }}>
+              <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 12, height: CHART_HEIGHT + 72, justifyContent: "flex-end" }}>
+                <div style={{ opacity: labelOp, fontSize: 26, fontWeight: 900, color: theme === "light" ? color : WHITE, marginBottom: 8 }}>
                   {val >= 1000000 ? `${(val / 1000000).toFixed(1)}M` : val >= 1000 ? `${(val / 1000).toFixed(1)}K` : val}{unit}
                 </div>
                 <div
                   style={{
                     width: "100%",
                     height: heightPx,
-                    background: `linear-gradient(180deg, ${color} 0%, ${color}88 100%)`,
-                    borderRadius: "8px 8px 0 0",
-                    boxShadow: `0 0 24px ${color}44`,
-                    minHeight: progress > 0 ? 2 : 0,
+                    background: isTop
+                      ? `linear-gradient(180deg, ${color} 0%, ${color}bb 100%)`
+                      : `linear-gradient(180deg, ${color}dd 0%, ${color}88 100%)`,
+                    borderRadius: "10px 10px 0 0",
+                    boxShadow: isTop ? `0 0 40px ${color}66, 0 -4px 20px ${color}44` : `0 0 20px ${color}33`,
+                    minHeight: barSpring > 0.01 ? 3 : 0,
                   }}
                 />
-                <div style={{ fontSize: 18, fontWeight: 600, color: t.textSub, textAlign: "center", opacity: labelOp, maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <div style={{ fontSize: 22, fontWeight: 700, color: t.textSub, textAlign: "center", opacity: labelOp, maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {String(bar.label ?? "")}
                 </div>
               </div>
@@ -644,7 +743,7 @@ export function LineChartScene({ sequence }: { sequence: Sequence }) {
   const color  = data.color ?? PURPLE;
   const unit   = data.unit ?? "";
 
-  const W = 960, H = 420, PL = 24, PR = 24, PT = 28, PB = 52;
+  const W = 968, H = 520, PL = 28, PR = 28, PT = 32, PB = 68;
 
   const maxVal = Math.max(...pts.map((p: Record<string, unknown>) => Number(p.value ?? 0)), 1);
   const minVal = Math.min(...pts.map((p: Record<string, unknown>) => Number(p.value ?? 0)), 0);
@@ -663,34 +762,35 @@ export function LineChartScene({ sequence }: { sequence: Sequence }) {
     return acc + Math.sqrt(dx * dx + dy * dy);
   }, 0);
 
-  const drawProgress = easeOut(frame, 15, 65, 0, 1);
+  const drawProgress = easeOut(frame, 12, 60, 0, 1);
   const dashOffset   = totalLength * (1 - drawProgress);
   const titleOp      = fadeIn(frame, 0);
   const titleY       = slideUp(frame, 0);
 
-  // Area fill color for light theme uses a darker tint
-  const areaColor = theme === "light" ? color : color;
-
   return (
     <AbsoluteFill style={{ fontFamily }}>
       <SceneBg accentColor={color} theme={theme} />
-      <ContentZone style={{ gap: 28 }}>
-        <SceneTitle title={data.title} subtitle={data.subtitle} op={titleOp} ty={titleY} theme={theme} />
+      <ContentZone style={{ gap: 32 }}>
+        <SceneTitle title={data.title} subtitle={data.subtitle} op={titleOp} ty={titleY} theme={theme} accentColor={color} frame={frame} />
 
         <div style={{ flex: 1 }}>
           <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "100%", overflow: "visible" }}>
             <defs>
               <linearGradient id="lineArea" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={areaColor} stopOpacity={theme === "light" ? "0.18" : "0.35"} />
-                <stop offset="100%" stopColor={areaColor} stopOpacity="0.01" />
+                <stop offset="0%" stopColor={color} stopOpacity={theme === "light" ? "0.22" : "0.42"} />
+                <stop offset="100%" stopColor={color} stopOpacity="0.01" />
               </linearGradient>
               <clipPath id="lineClip">
                 <rect x="0" y="0" width={W * drawProgress} height={H} />
               </clipPath>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
             </defs>
 
             {[0.25, 0.5, 0.75].map((r) => (
-              <line key={r} x1={PL} y1={PT + r * (H - PT - PB)} x2={W - PR} y2={PT + r * (H - PT - PB)} stroke={t.gridLine} strokeWidth={1} />
+              <line key={r} x1={PL} y1={PT + r * (H - PT - PB)} x2={W - PR} y2={PT + r * (H - PT - PB)} stroke={t.gridLine} strokeWidth={1.5} />
             ))}
 
             {pts.length > 1 && (
@@ -701,22 +801,24 @@ export function LineChartScene({ sequence }: { sequence: Sequence }) {
               />
             )}
             {pts.length > 1 && (
-              <polyline points={svgPoints} fill="none" stroke={color} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={totalLength} strokeDashoffset={dashOffset} />
+              <polyline points={svgPoints} fill="none" stroke={color} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray={totalLength} strokeDashoffset={dashOffset} filter="url(#glow)" />
             )}
 
             {pts.map((p: Record<string, unknown>, i: number) => {
               const px  = toX(i);
               const py  = toY(Number(p.value ?? 0));
-              const pOp = easeOut(frame, 15 + (i / pts.length) * 45, 30 + (i / pts.length) * 45, 0, 1);
+              const pOp = easeOut(frame, 12 + (i / pts.length) * 48, 28 + (i / pts.length) * 48, 0, 1);
+              const isLast = i === pts.length - 1;
               return (
                 <g key={i}>
-                  <circle cx={px} cy={py} r={9} fill={color} opacity={pOp} />
-                  <circle cx={px} cy={py} r={4} fill={theme === "light" ? WHITE : WHITE} opacity={pOp} />
-                  <text x={px} y={H - 12} textAnchor="middle" fill={t.textSub} fontSize={16} fontWeight={500} fillOpacity={0.8}>
+                  <circle cx={px} cy={py} r={isLast ? 14 : 10} fill={color} opacity={pOp} style={{ filter: isLast ? `drop-shadow(0 0 12px ${color})` : undefined }} />
+                  <circle cx={px} cy={py} r={isLast ? 6 : 4} fill={WHITE} opacity={pOp} />
+                  <text x={px} y={H - 18} textAnchor="middle" fill={t.textSub} fontSize={20} fontWeight={600} fillOpacity={0.9}>
                     {String(p.label ?? "")}
                   </text>
-                  {i === pts.length - 1 && (
-                    <text x={px} y={py - 18} textAnchor="middle" fill={color} fontSize={18} fontWeight={800} opacity={pOp}>
+                  {isLast && (
+                    <text x={px} y={py - 24} textAnchor="middle" fill={color} fontSize={24} fontWeight={900} opacity={pOp}>
                       {Number(p.value ?? 0) >= 1000 ? `${(Number(p.value ?? 0) / 1000).toFixed(1)}K` : String(p.value ?? "")}{unit}
                     </text>
                   )}
@@ -753,13 +855,14 @@ export function DonutChartScene({ sequence }: { sequence: Sequence }) {
 
   const d        = sequence.sceneData as Record<string, unknown>;
   const subtitle = typeof d.subtitle === "string" ? d.subtitle : undefined;
+  const accent   = typeof d.accentColor === "string" ? d.accentColor : PURPLE;
 
   const DONUT_COLORS = [PURPLE, FUSCHIA, "#7c6fe8", "#e8398e", "#4ade80", "#facc15"];
-  const R = 180, SW = 52, CX = 220, CY = 220;
+  const R = 210, SW = 64, CX = 250, CY = 250;
   const circumference = 2 * Math.PI * R;
   const total = segs.reduce((acc: number, s: Record<string, unknown>) => acc + Number(s.value ?? 0), 0) || 1;
 
-  const overallProgress = easeOut(frame, 10, 65, 0, 1);
+  const overallProgress = easeOut(frame, 8, 60, 0, 1);
   const titleOp = fadeIn(frame, 0);
   const titleY  = slideUp(frame, 0);
 
@@ -776,44 +879,44 @@ export function DonutChartScene({ sequence }: { sequence: Sequence }) {
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
-      <SceneBg theme={theme} />
-      <ContentZone style={{ gap: 28 }}>
-        <SceneTitle title={data.title} subtitle={subtitle} op={titleOp} ty={titleY} theme={theme} />
+      <SceneBg accentColor={accent} theme={theme} />
+      <ContentZone style={{ gap: 32 }}>
+        <SceneTitle title={data.title} subtitle={subtitle} op={titleOp} ty={titleY} theme={theme} accentColor={accent} frame={frame} />
 
-        <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 52 }}>
-          {/* Donut SVG */}
+        <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 60 }}>
+          {/* Donut SVG — larger */}
           <div style={{ position: "relative", flexShrink: 0 }}>
             <svg width={CX * 2} height={CY * 2} style={{ overflow: "visible" }}>
               {segmentEls.map(({ dashArray, rotate, color }, i) => (
                 <circle key={i} cx={CX} cy={CY} r={R} fill="none" stroke={color} strokeWidth={SW}
                   strokeDasharray={dashArray} strokeDashoffset={0} strokeLinecap="butt"
                   transform={`rotate(${rotate} ${CX} ${CY})`}
-                  style={{ filter: `drop-shadow(0 0 10px ${color}66)` }}
+                  style={{ filter: `drop-shadow(0 0 14px ${color}77)` }}
                 />
               ))}
-              <circle cx={CX} cy={CY} r={R - SW / 2 - 10} fill={t.bg} />
+              <circle cx={CX} cy={CY} r={R - SW / 2 - 12} fill={t.bg} />
             </svg>
 
             {/* Center text */}
             <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", textAlign: "center", opacity: overallProgress }}>
               {data.centerValue && (
-                <div style={{ fontSize: 44, fontWeight: 900, color: t.text, lineHeight: 1 }}>{data.centerValue}</div>
+                <div style={{ fontSize: 56, fontWeight: 900, color: t.text, lineHeight: 1 }}>{data.centerValue}</div>
               )}
               {data.centerLabel && (
-                <div style={{ fontSize: 18, fontWeight: 500, color: t.textMuted, marginTop: 6 }}>{data.centerLabel}</div>
+                <div style={{ fontSize: 22, fontWeight: 600, color: t.textMuted, marginTop: 8 }}>{data.centerLabel}</div>
               )}
             </div>
           </div>
 
           {/* Legend */}
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 20 }}>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 24 }}>
             {segmentEls.map(({ seg, color, ratio }, i) => {
-              const legOp = fadeIn(frame, 20 + i * 7);
+              const legOp = fadeIn(frame, 18 + i * 8);
               return (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 16, opacity: legOp }}>
-                  <div style={{ width: 16, height: 16, borderRadius: "50%", background: color, flexShrink: 0, boxShadow: `0 0 10px ${color}88` }} />
-                  <div style={{ flex: 1, fontSize: 22, fontWeight: 600, color: t.text }}>{String(seg.label ?? "")}</div>
-                  <div style={{ fontSize: 22, fontWeight: 800, color }}>{Math.round(ratio * 100)}%</div>
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 20, opacity: legOp }}>
+                  <div style={{ width: 20, height: 20, borderRadius: "50%", background: color, flexShrink: 0, boxShadow: `0 0 14px ${color}99` }} />
+                  <div style={{ flex: 1, fontSize: 28, fontWeight: 600, color: t.text }}>{String(seg.label ?? "")}</div>
+                  <div style={{ fontSize: 30, fontWeight: 900, color }}>{Math.round(ratio * 100)}%</div>
                 </div>
               );
             })}
@@ -848,36 +951,38 @@ export function ComparisonScene({ sequence }: { sequence: Sequence }) {
 
   const d        = sequence.sceneData as Record<string, unknown>;
   const subtitle = typeof d.subtitle === "string" ? d.subtitle : data.period;
+  const accent   = typeof d.accentColor === "string" ? d.accentColor : PURPLE;
 
   const titleOp  = fadeIn(frame, 0);
   const titleY   = slideUp(frame, 0);
-  const headerOp = fadeIn(frame, 8);
+  const headerOp = fadeIn(frame, 10);
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
-      <SceneBg theme={theme} />
-      <ContentZone style={{ gap: 24 }}>
-        <SceneTitle title={data.title} subtitle={subtitle} op={titleOp} ty={titleY} theme={theme} />
+      <SceneBg accentColor={accent} theme={theme} />
+      <ContentZone style={{ gap: 28 }}>
+        <SceneTitle title={data.title} subtitle={subtitle} op={titleOp} ty={titleY} theme={theme} accentColor={accent} frame={frame} />
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr 120px 120px",
+            gridTemplateColumns: "1fr 140px 140px",
             gap: 16,
             opacity: headerOp,
-            borderBottom: `1.5px solid ${theme === "light" ? PURPLE + "22" : "rgba(255,255,255,0.1)"}`,
-            paddingBottom: 16,
+            borderBottom: `2px solid ${theme === "light" ? PURPLE + "28" : "rgba(255,255,255,0.12)"}`,
+            paddingBottom: 18,
           }}
         >
-          <div style={{ fontSize: 20, color: t.textMuted, fontWeight: 600 }}>Métrica</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: PURPLE, textAlign: "center" }}>{data.labelA}</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: FUSCHIA, textAlign: "center" }}>{data.labelB}</div>
+          <div style={{ fontSize: 24, color: t.textMuted, fontWeight: 700 }}>Métrica</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: PURPLE, textAlign: "center" }}>{data.labelA}</div>
+          <div style={{ fontSize: 28, fontWeight: 900, color: FUSCHIA, textAlign: "center" }}>{data.labelB}</div>
         </div>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
           {metrics.map((m: Record<string, unknown>, i: number) => {
-            const rowOp = fadeIn(frame, 18 + i * 7);
-            const rowY  = slideUp(frame, 18 + i * 7, 24);
+            const rowS  = spr(frame, 16 + i * 8, { damping: 14, stiffness: 100 });
+            const rowOp = interpolate(rowS, [0, 1], [0, 1]);
+            const rowX  = interpolate(rowS, [0, 1], [60, 0]);
             const aWins = m.aWins !== undefined ? Boolean(m.aWins) : Number(m.valueA ?? 0) >= Number(m.valueB ?? 0);
             const unit  = typeof m.unit === "string" ? m.unit : "";
 
@@ -886,22 +991,22 @@ export function ComparisonScene({ sequence }: { sequence: Sequence }) {
                 key={i}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 120px 120px",
+                  gridTemplateColumns: "1fr 140px 140px",
                   gap: 16,
                   opacity: rowOp,
-                  transform: `translateY(${rowY}px)`,
+                  transform: `translateX(${rowX}px)`,
                   background: t.rowCard,
-                  border: `1.5px solid ${t.rowBorder}`,
-                  borderRadius: 16,
-                  padding: "20px 24px",
+                  border: `2px solid ${t.rowBorder}`,
+                  borderRadius: 20,
+                  padding: "24px 28px",
                   alignItems: "center",
                 }}
               >
-                <div style={{ fontSize: 22, fontWeight: 500, color: t.textSub }}>{String(m.label ?? "")}</div>
-                <div style={{ textAlign: "center", fontSize: 26, fontWeight: 900, color: aWins ? PURPLE : t.textMuted, ...(aWins ? { textShadow: `0 0 24px ${PURPLE}55` } : {}) }}>
+                <div style={{ fontSize: 26, fontWeight: 600, color: t.textSub }}>{String(m.label ?? "")}</div>
+                <div style={{ textAlign: "center", fontSize: 32, fontWeight: 900, color: aWins ? PURPLE : t.textMuted, ...(aWins ? { textShadow: `0 0 28px ${PURPLE}66` } : {}) }}>
                   {String(m.valueA ?? "")}{unit}
                 </div>
-                <div style={{ textAlign: "center", fontSize: 26, fontWeight: 900, color: !aWins ? FUSCHIA : t.textMuted, ...(!aWins ? { textShadow: `0 0 24px ${FUSCHIA}55` } : {}) }}>
+                <div style={{ textAlign: "center", fontSize: 32, fontWeight: 900, color: !aWins ? FUSCHIA : t.textMuted, ...(!aWins ? { textShadow: `0 0 28px ${FUSCHIA}66` } : {}) }}>
                   {String(m.valueB ?? "")}{unit}
                 </div>
               </div>
@@ -935,6 +1040,9 @@ export function LeaderboardScene({ sequence }: { sequence: Sequence }) {
   const items  = (data.items ?? []).slice(0, 6);
   const unit   = data.unit ?? "";
 
+  const d = sequence.sceneData as Record<string, unknown>;
+  const accent = typeof d.accentColor === "string" ? d.accentColor : PURPLE;
+
   const maxNumVal = Math.max(...items.map((it: Record<string, unknown>) => Number(it.value ?? 0)), 1);
   const POSITION_COLORS = [PURPLE, FUSCHIA, "#7c6fe8", theme === "light" ? DARK : WHITE, theme === "light" ? DARK : WHITE, theme === "light" ? DARK : WHITE];
 
@@ -943,19 +1051,20 @@ export function LeaderboardScene({ sequence }: { sequence: Sequence }) {
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
-      <SceneBg theme={theme} />
-      <ContentZone style={{ gap: 24 }}>
-        <SceneTitle title={data.title} subtitle={data.subtitle} op={titleOp} ty={titleY} theme={theme} />
+      <SceneBg accentColor={accent} theme={theme} />
+      <ContentZone style={{ gap: 28 }}>
+        <SceneTitle title={data.title} subtitle={data.subtitle} op={titleOp} ty={titleY} theme={theme} accentColor={accent} frame={frame} />
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 14 }}>
           {items.map((item: Record<string, unknown>, i: number) => {
-            const rowS    = spr(frame, 10 + i * 8);
+            const rowS    = spr(frame, 8 + i * 9, { damping: 13, stiffness: 100 });
             const rowOp   = interpolate(rowS, [0, 1], [0, 1]);
-            const rowX    = interpolate(rowS, [0, 1], [80, 0]);
+            const rowX    = interpolate(rowS, [0, 1], [100, 0]);
             const color   = POSITION_COLORS[i] ?? (theme === "light" ? DARK : WHITE);
             const numVal  = Number(item.value ?? 0);
-            const barProg = easeOut(frame, 20 + i * 7, 55 + i * 7, 0, 1);
-            const barWidth = `${(numVal / maxNumVal) * 100 * barProg}%`;
+            const barSpring = spr(frame, 18 + i * 8, { damping: 200 });
+            const barWidth = `${(numVal / maxNumVal) * 100 * barSpring}%`;
+            const isPodium = i < 3;
 
             return (
               <div
@@ -963,33 +1072,34 @@ export function LeaderboardScene({ sequence }: { sequence: Sequence }) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 18,
+                  gap: 22,
                   opacity: rowOp,
                   transform: `translateX(${rowX}px)`,
-                  background: i < 3 ? `${color}0e` : t.rowCard,
-                  border: `1.5px solid ${i < 3 ? color + "30" : t.rowBorder}`,
-                  borderRadius: 18,
-                  padding: "18px 24px",
+                  background: isPodium ? `${color}12` : t.rowCard,
+                  border: `2px solid ${isPodium ? color + "40" : t.rowBorder}`,
+                  borderRadius: 22,
+                  padding: "20px 28px",
+                  boxShadow: isPodium ? `0 0 32px ${color}18` : undefined,
                 }}
               >
-                <div style={{ width: 36, fontSize: 24, fontWeight: 900, color, textAlign: "center", flexShrink: 0, ...(i < 3 ? { textShadow: `0 0 20px ${color}88` } : {}) }}>
+                <div style={{ width: 42, fontSize: isPodium ? 32 : 26, fontWeight: 900, color, textAlign: "center", flexShrink: 0, ...(isPodium ? { textShadow: `0 0 24px ${color}aa` } : {}) }}>
                   {i + 1}
                 </div>
                 {typeof item.icon === "string" && (
-                  <ScIcon icon={item.icon} size={26} color={i < 3 ? color : t.textMuted} />
+                  <ScIcon icon={item.icon} size={30} color={isPodium ? color : t.textMuted} />
                 )}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 22, fontWeight: 700, color: i < 3 ? (theme === "light" ? DARK : WHITE) : t.textSub, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{ fontSize: 26, fontWeight: 800, color: isPodium ? (theme === "light" ? DARK : WHITE) : t.textSub, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {String(item.label ?? "")}
                   </div>
                   {typeof item.sublabel === "string" && (
-                    <div style={{ fontSize: 16, color: t.textMuted, marginTop: 3 }}>{item.sublabel}</div>
+                    <div style={{ fontSize: 20, color: t.textMuted, marginTop: 4 }}>{item.sublabel}</div>
                   )}
                 </div>
-                <div style={{ width: 100, height: 6, background: `${color}20`, borderRadius: 3, flexShrink: 0, overflow: "hidden" }}>
-                  <div style={{ width: barWidth, height: "100%", background: color, borderRadius: 3 }} />
+                <div style={{ width: 120, height: 8, background: `${color}22`, borderRadius: 4, flexShrink: 0, overflow: "hidden" }}>
+                  <div style={{ width: barWidth, height: "100%", background: color, borderRadius: 4, boxShadow: isPodium ? `0 0 8px ${color}99` : undefined }} />
                 </div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: i < 3 ? color : t.textSub, flexShrink: 0, minWidth: 80, textAlign: "right" }}>
+                <div style={{ fontSize: 26, fontWeight: 900, color: isPodium ? color : t.textSub, flexShrink: 0, minWidth: 100, textAlign: "right" }}>
                   {numVal >= 1000000 ? `${(numVal / 1000000).toFixed(1)}M` : numVal >= 1000 ? `${(numVal / 1000).toFixed(1)}K` : String(item.value ?? "")}{unit}
                 </div>
               </div>
@@ -1002,7 +1112,7 @@ export function LeaderboardScene({ sequence }: { sequence: Sequence }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// InsightScene
+// InsightScene  — texto impactante, centra toda la pantalla
 // ─────────────────────────────────────────────────────────────────────────────
 
 function getInsightData(s: Sequence): InsightData {
@@ -1027,48 +1137,70 @@ export function InsightScene({ sequence }: { sequence: Sequence }) {
   const d        = sequence.sceneData as Record<string, unknown>;
   const subtitle = typeof d.subtitle === "string" ? d.subtitle : undefined;
 
-  const iconOp    = fadeIn(frame, 0, 15);
-  const iconScale = interpolate(spr(frame, 0, { damping: 12 }), [0, 1], [0.5, 1]);
-  const textOp    = fadeIn(frame, 14);
-  const textY     = slideUp(frame, 14, 36);
-  const statOp    = fadeIn(frame, 28);
-  const sourceOp  = fadeIn(frame, 38);
+  const iconS      = spr(frame, 0, { damping: 11, stiffness: 90 });
+  const iconOp     = interpolate(iconS, [0, 1], [0, 1]);
+  const iconScale  = interpolate(iconS, [0, 1], [0.4, 1]);
+
+  const statS      = spr(frame, 12, { damping: 12, stiffness: 95 });
+  const statScale  = interpolate(statS, [0, 1], [0.7, 1]);
+  const statOp     = interpolate(statS, [0, 1], [0, 1]);
+
+  const textOp     = fadeIn(frame, 22, 20);
+  const textY      = slideUp(frame, 22, 50);
+  const sourceOp   = fadeIn(frame, 36);
 
   return (
     <AbsoluteFill style={{ fontFamily }}>
       <SceneBg accentColor={accent} theme={theme} />
 
-      <ContentZone center style={{ gap: 28 }}>
+      <ContentZone center style={{ gap: 32 }}>
         {subtitle && (
-          <div style={{ opacity: textOp, fontSize: 22, fontWeight: 600, color: t.textMuted, letterSpacing: 1.5, textTransform: "uppercase" }}>
+          <div style={{ opacity: fadeIn(frame, 4), fontSize: 26, fontWeight: 700, color: t.textMuted, letterSpacing: 2.5, textTransform: "uppercase" }}>
             {subtitle}
           </div>
         )}
 
         {data.icon && (
-          <div style={{ opacity: iconOp, transform: `scale(${iconScale})`, background: `${accent}18`, border: `1.5px solid ${accent}44`, borderRadius: 28, padding: 24, boxShadow: `0 0 60px ${accent}33` }}>
-            <ScIcon icon={data.icon} size={64} color={accent} />
+          <div style={{
+            opacity: iconOp,
+            transform: `scale(${iconScale})`,
+            background: `${accent}1e`,
+            border: `2px solid ${accent}55`,
+            borderRadius: 36,
+            padding: 32,
+            boxShadow: `0 0 80px ${accent}44`,
+          }}>
+            <ScIcon icon={data.icon} size={88} color={accent} />
           </div>
         )}
 
         {data.stat && (
-          <div style={{ opacity: statOp }}>
-            <div style={{ fontSize: 96, fontWeight: 900, color: accent, lineHeight: 1, textShadow: `0 0 60px ${accent}44` }}>
+          <div style={{ opacity: statOp, transform: `scale(${statScale})`, textAlign: "center" }}>
+            <div style={{ fontSize: 160, fontWeight: 900, color: accent, lineHeight: 0.9, textShadow: `0 0 100px ${accent}55, 0 0 40px ${accent}33` }}>
               {data.stat}
             </div>
             {data.statLabel && (
-              <div style={{ fontSize: 24, color: t.textSub, marginTop: 8, fontWeight: 500 }}>{data.statLabel}</div>
+              <div style={{ fontSize: 36, color: t.textSub, marginTop: 16, fontWeight: 600 }}>{data.statLabel}</div>
             )}
           </div>
         )}
 
-        <div style={{ opacity: textOp, transform: `translateY(${textY}px)`, fontSize: 38, fontWeight: 700, color: t.text, lineHeight: 1.4 }}>
+        <div style={{
+          opacity: textOp,
+          transform: `translateY(${textY}px)`,
+          fontSize: 50,
+          fontWeight: 800,
+          color: t.text,
+          lineHeight: 1.3,
+          textAlign: "center",
+          maxWidth: 920,
+        }}>
           {data.insight}
         </div>
       </ContentZone>
 
       {data.source && (
-        <div style={{ position: "absolute", bottom: 72, left: 0, right: 0, textAlign: "center", opacity: sourceOp, fontSize: 18, fontWeight: 500, color: t.textMuted, letterSpacing: 0.5 }}>
+        <div style={{ position: "absolute", bottom: STRIP_BOTTOM, left: 0, right: 0, textAlign: "center", opacity: sourceOp, fontSize: 22, fontWeight: 600, color: t.textMuted, letterSpacing: 0.5 }}>
           {data.source}
         </div>
       )}
@@ -1098,53 +1230,71 @@ export function ScOutroScene({ sequence }: { sequence: Sequence }) {
   const t      = THEMES[theme];
   const accent = data.accentColor ?? PURPLE;
 
-  const logoS     = spr(frame, 0, { damping: 10, stiffness: 80 });
-  const logoScale = interpolate(logoS, [0, 1], [0.5, 1]);
-  const logoOp    = interpolate(logoS, [0, 1], [0, 1]);
-  const tagOp     = fadeIn(frame, 18);
-  const tagY      = slideUp(frame, 18);
-  const handleOp  = fadeIn(frame, 30);
-  const ctaS      = spr(frame, 40, { damping: 12 });
-  const ctaScale  = interpolate(ctaS, [0, 1], [0.85, 1]);
-  const ctaOp     = interpolate(ctaS, [0, 1], [0, 1]);
-  const pulse     = interpolate(Math.sin(frame * 0.12), [-1, 1], [0.4, 1]);
+  const { durationInFrames } = useVideoConfig();
+
+  const logoS      = spr(frame, 0, { damping: 10, stiffness: 80 });
+  const logoScale  = interpolate(logoS, [0, 1], [0.4, 1]);
+  const logoOp     = interpolate(logoS, [0, 1], [0, 1]);
+  const tagOp      = fadeIn(frame, 16, 18);
+  const tagY       = slideUp(frame, 16, 60);
+  const handleOp   = fadeIn(frame, 28, 18);
+  const ctaS       = spr(frame, 40, { damping: 11, stiffness: 90 });
+  const ctaScale   = interpolate(ctaS, [0, 1], [0.8, 1]);
+  const ctaOp      = interpolate(ctaS, [0, 1], [0, 1]);
+
+  // Pulsating glow on CTA button
+  const pulse = interpolate(
+    Math.sin(frame * 0.10),
+    [-1, 1],
+    [0.35, 1]
+  );
+
+  // Fade out near end
+  const fadeOutOp = interpolate(frame, [durationInFrames - 20, durationInFrames - 4], [1, 0], {
+    extrapolateLeft: "clamp", extrapolateRight: "clamp",
+  });
 
   return (
-    <AbsoluteFill style={{ fontFamily }}>
+    <AbsoluteFill style={{ fontFamily, opacity: fadeOutOp }}>
       <SceneBg accentColor={accent} theme={theme} />
 
-      <ContentZone center style={{ gap: 24 }}>
-        <div style={{ opacity: logoOp, transform: `scale(${logoScale})` }}>
-          <Img src={staticFile("logo.webp")} style={{ width: 200, height: "auto", objectFit: "contain" }} />
+      <ContentZone center style={{ gap: 28 }}>
+        {/* Logo */}
+        <div style={{ opacity: logoOp, transform: `scale(${logoScale})`, marginBottom: 8 }}>
+          <Img src={staticFile("logo.webp")} style={{ width: 240, height: "auto", objectFit: "contain" }} />
         </div>
 
-        <div style={{ opacity: tagOp, transform: `translateY(${tagY}px)`, fontSize: 34, fontWeight: 600, color: t.textSub, lineHeight: 1.3 }}>
+        {/* Tagline */}
+        <div style={{ opacity: tagOp, transform: `translateY(${tagY}px)`, fontSize: 44, fontWeight: 700, color: t.textSub, lineHeight: 1.3, textAlign: "center" }}>
           {data.tagline}
         </div>
 
-        <div style={{ width: easeOut(frame, 15, 45, 0, 160), height: 3, background: `linear-gradient(90deg, ${accent}, ${FUSCHIA})`, borderRadius: 2 }} />
+        {/* Accent divider */}
+        <AccentLine frame={frame} delay={14} accent={accent} width={200} />
 
         {data.website && (
-          <div style={{ opacity: handleOp, fontSize: 28, fontWeight: 700, color: t.text }}>{data.website}</div>
+          <div style={{ opacity: handleOp, fontSize: 36, fontWeight: 800, color: t.text }}>{data.website}</div>
         )}
         {data.handle && (
-          <div style={{ opacity: handleOp, fontSize: 26, fontWeight: 600, color: FUSCHIA }}>{data.handle}</div>
+          <div style={{ opacity: handleOp, fontSize: 34, fontWeight: 700, color: FUSCHIA }}>{data.handle}</div>
         )}
 
+        {/* CTA Button */}
         {data.ctaText && (
           <div
             style={{
               opacity: ctaOp,
               transform: `scale(${ctaScale})`,
-              marginTop: 12,
+              marginTop: 16,
               background: `linear-gradient(135deg, ${accent}, ${FUSCHIA})`,
-              borderRadius: 70,
-              padding: "22px 52px",
-              fontSize: 24,
-              fontWeight: 800,
+              borderRadius: 80,
+              padding: "30px 64px",
+              fontSize: 32,
+              fontWeight: 900,
               color: WHITE,
               letterSpacing: 0.3,
-              boxShadow: `0 0 ${50 * pulse}px ${accent}66, 0 0 ${24 * pulse}px ${FUSCHIA}44`,
+              textAlign: "center",
+              boxShadow: `0 0 ${60 * pulse}px ${accent}77, 0 0 ${30 * pulse}px ${FUSCHIA}55, 0 8px 32px rgba(0,0,0,0.25)`,
             }}
           >
             {data.ctaText}

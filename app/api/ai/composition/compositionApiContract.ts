@@ -34,78 +34,105 @@ Cada elemento de "sequences":
 • "transition": {
     "type": "fade"|"slide"|"wipe"|"flip"|"clock-wipe"|"none",
     "durationInFrames": 20,
-    "timing": "linear"|"spring",
+    "timing": "spring",
     "direction"?: "from-left"|"from-right"|"from-top"|"from-bottom"
   }
   La última escena visual no necesita transition.
+  RECOMENDADO: usa siempre "timing": "spring" para movimiento orgánico.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⏱️ DURACIÓN (PRIORIDAD MÁXIMA)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 • Si el usuario pide duración explícita (ej. "30 segundos", "1 minuto"), respétala:
-  totalFramesObjetivo = segundosPedidos × 30. Reparte entre escenas.
-• Si no especifica duración, elige lo natural para el contenido (típico 25–60 s para un reel de datos).
-• Si faltan datos para completar el tiempo: añade más contexto, escena de insight, comparativas.
+  totalFramesObjetivo = segundosPedidos × 30.
+• Si no especifica duración, usa 30–45 segundos como default.
+• Si faltan datos: añade escenas de insight, comparativas o assets del usuario.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎧 ELEVENLABS — OBLIGATORIO (música + voz)
+🎧 ELEVENLABS — AUDIO OBLIGATORIO (música + voz)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 El backend genera el audio real desde sceneData._elevenlabs y rellena "src" con la URL.
-Sin _elevenlabs no habrá audio automático.
+Sin _elevenlabs no habrá audio. SIEMPRE incluye al menos música y voz.
 
-Proceso:
+Flujo de diseño:
 1. Diseña todas las escenas visuales con sus duraciones.
-2. Calcula totalBrutoFrames ≈ suma de durationInFrames de escenas visuales.
-3. Ajusta duraciones de escenas para que coincidan con la narración (~8 s visual = ~240 frames).
-4. Añade secuencias sceneType "audio" con _elevenlabs.
+2. Calcula totalBrutoFrames = Σ(durationInFrames escenas visuales).
+3. Añade secuencias sceneType "audio" con _elevenlabs.
 
-Sincronización (el reproductor usa "order"):
-• Pista de música: order 0, index 0 del array → arranca con la primera escena visual.
-• Voz de una escena: coloca el audio INMEDIATAMENTE ANTES de esa escena visual en el array.
-  Ejemplo: [ música(order:0), audio_voz_intro(order:1), sc-intro(order:2), audio_voz_stats(order:3), stat-hero(order:4) ]
+Orden de secuencias (el reproductor usa "order"):
+• Música de fondo: order 0 (la primera), arranca desde el inicio.
+• Voz de una escena: colócala INMEDIATAMENTE ANTES de la escena visual en el array.
+  Ejemplo completo:
+  [
+    { order: 0, sceneType: "audio", sceneData: { _elevenlabs: { type: "music", ... }, volume: 0.14, loop: true, src: "" } },
+    { order: 1, sceneType: "audio", sceneData: { _elevenlabs: { type: "voice", text: "..." }, volume: 0.9, src: "" } },
+    { order: 2, sceneType: "sc-intro", ... },
+    { order: 3, sceneType: "audio", sceneData: { _elevenlabs: { type: "voice", text: "..." }, volume: 0.9, src: "" } },
+    { order: 4, sceneType: "stat-hero", ... },
+    ...
+  ]
 
 sceneType "audio" — sceneData obligatorio:
-• "src": ""                   (vacío; backend lo rellena)
-• "volume": 0.22–1            (música: ~0.22; voz: ~0.9; sfx: ~0.5)
-• "loop": true                (solo para música de fondo)
-• "durationInFrames": número
-    – música:  totalBrutoFrames (= suma durationInFrames de escenas VISUALES)
-    – voz:     durationInFrames de la escena visual que acompaña + 60 (margen 2 s para que el TTS no se corte)
+• "src": ""                  (vacío; backend lo rellena con la URL real)
+• "volume":
+    – música:  0.12–0.18     (SIEMPRE menor que la voz — música es fondo)
+    – voz:     0.9           (siempre)
+    – sfx:     0.35–0.5
+• "loop": true               (SOLO para música de fondo)
+• "durationInFrames":
+    – música:  totalBrutoFrames (= Σ durationInFrames escenas VISUALES)
+    – voz:     durationInFrames de la escena acompañada + 60 (margen 2s anti-corte)
     – sfx:     durationSeconds × 30
 
-⚠️  CRÍTICO — durationInFrames de VOZ:
-    La IA de voz (ElevenLabs) genera audio de duración variable. Si pones
-    durationInFrames igual a la escena, Remotion CORTARÁ la voz a mitad de frase.
-    Siempre añade 60 frames de margen: durationInFrames = escena_acompañada + 60.
+⚠️ CRÍTICO — VOZ Y CORTE:
+    ElevenLabs genera audio de duración variable según el texto.
+    Si pones durationInFrames = duración exacta de la escena, Remotion CORTARÁ la voz a mitad.
+    SIEMPRE añade 60 frames de margen: voz.durationInFrames = escena + 60.
+    Si la escena es corta (120f), escribe un guion corto (1-2 frases) para que quepa.
 
 Marcador _elevenlabs (dentro de sceneData):
 
-Música:
+MÚSICA DE FONDO:
   "_elevenlabs": {
     "type": "music",
-    "prompt": "<género, BPM, instrumentos, mood — específico. SIEMPRE instrumental, sin voces ni canto>",
+    "prompt": "<describir género, BPM, instrumentos, mood — SIEMPRE instrumental, sin voz ni lírica>",
     "durationMs": <totalBrutoFrames / 30 * 1000>
   }
+  Ejemplos de prompts de música:
+  • "upbeat corporate electronic, inspiring, minimal percussion, 95 BPM, no vocals, no lyrics, instrumental only"
+  • "modern cinematic ambient, tense but hopeful, synthesizer pads, 80 BPM, instrumental"
+  • "hip-hop lo-fi beats, motivational, clean piano chords, 90 BPM, no vocals, instrumental"
 
-Voz:
+VOZ NARRATIVA:
   "_elevenlabs": {
     "type": "voice",
-    "text": "<guion hablado — mismo idioma que el video; ajusta la extensión para que quepa en (escena_acompañada/30) segundos>"
+    "text": "<guion hablado — emocional, narrativo, en el idioma del usuario. Ajusta la extensión para que quepa en (escena/30) segundos. Máx 2 frases por escena corta.>"
   }
+  Principios del guion:
+  • Escribe como si le hablaras a un amigo, no como informe corporativo.
+  • El guion describe la EMOCIÓN del dato, no solo el número.
+  • Ejemplo malo:  "Las impresiones totales alcanzaron 3.2 millones con un incremento del 24%."
+  • Ejemplo bueno: "3.2 millones de personas vieron tu marca. Y crecimos 24% más que antes."
+  • Para escenas de 4s (120f): máx 15-20 palabras.
+  • Para escenas de 6s (180f): máx 25-35 palabras.
+  • Para escenas de 7s (210f): máx 35-45 palabras.
 
-SFX (opcional):
+SFX (opcional — solo si agrega valor):
   "_elevenlabs": {
     "type": "sfx",
-    "prompt": "<descripción del sonido>",
-    "durationSeconds": <0.5–8>
+    "prompt": "<descripción del sonido, ej: 'whoosh transition sound effect, brief' o 'impact boom when number reveals'>",
+    "durationSeconds": <0.5–3.0>
   }
 
-Paquete mínimo recomendado:
-• 1× música en order 0, loop true.
-• 1× voz por cada escena importante (intro, escenas de datos clave, outro).
-• La voz debe describir lo que se muestra en pantalla en ese momento.
+Paquete mínimo OBLIGATORIO:
+  ✓ 1× música en order 0, loop true.
+  ✓ 1× voz para sc-intro.
+  ✓ 1× voz para stat-hero (el momento más impactante).
+  ✓ 1× voz para insight.
+  ✓ 1× voz para sc-outro.
+  Opcionales: voz para cada escena de datos, SFX en momentos clave.
 
 Responde solo con el JSON (o un único bloque \`\`\`json con ese objeto).
 `.trim();

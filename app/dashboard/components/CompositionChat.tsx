@@ -93,12 +93,16 @@ Incluye música instrumental animada y narración en español.`;
 /** Genera el bloque de contexto de assets para el prompt de IA */
 function buildAssetContext(assets: AssetDTO[]): string {
   if (assets.length === 0) return "";
-  const lines = assets.map((a) => {
+  const lines = assets.map((a, idx) => {
     const typeLabel = a.type === "image" ? "imagen" : a.type === "video" ? "video" : a.type === "audio" ? "audio" : "fuente";
-    const desc = a.description ? ` — "${a.description}"` : "";
-    return `  - [${typeLabel}] ${a.name}${desc}\n    URL: ${a.downloadUrl}`;
+    const usage = a.description?.trim() || "Sin instruccion explicita: usalo donde aporte valor narrativo.";
+    return `  ${idx + 1}. [${typeLabel}] ${a.name}\n     URL: ${a.downloadUrl}\n     INSTRUCCION_DE_USO: ${usage}`;
   });
-  return `\n\nAssets disponibles para esta composición (úsalos como src en las escenas correspondientes):\n${lines.join("\n")}`;
+  return `\n\nAssets disponibles para esta composición:
+- Debes contemplarlos al generar escenas.
+- Si INSTRUCCION_DE_USO existe, priorizala como requisito de uso.
+- Usa las URL exactas en src cuando aplique.
+${lines.join("\n")}`;
 }
 
 /** Resuelve marcadores _elevenlabs generando audio real */
@@ -151,6 +155,8 @@ function AssetStep({
   onDeleteAsset,
   onUpdateAsset,
   onNext,
+  uploadIntent,
+  onUploadIntentChange,
   dragging,
   onDragOver,
   onDragLeave,
@@ -158,10 +164,12 @@ function AssetStep({
 }: {
   assets: AssetDTO[];
   uploads: UploadItem[];
-  onFilesSelected: (files: FileList) => void;
+  onFilesSelected: (files: FileList, uploadInstruction?: string) => void;
   onDeleteAsset: (id: string) => void;
   onUpdateAsset: (id: string, patch: { name?: string; description?: string }) => void;
   onNext: () => void;
+  uploadIntent: string;
+  onUploadIntentChange: (value: string) => void;
   dragging: boolean;
   onDragOver: (e: React.DragEvent) => void;
   onDragLeave: () => void;
@@ -220,13 +228,34 @@ function AssetStep({
         <p style={{ margin: "3px 0 0", fontSize: 10, color: "rgba(255,255,255,0.3)" }}>
           Imágenes · Videos · Audio · Fuentes
         </p>
+        <textarea
+          value={uploadIntent}
+          onChange={(e) => onUploadIntentChange(e.target.value)}
+          placeholder="Opcional: explica qué quieres que la IA haga con estos assets."
+          rows={2}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            marginTop: 8,
+            width: "100%",
+            maxWidth: 480,
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(157,255,32,0.25)",
+            borderRadius: 7,
+            color: "rgba(255,255,255,0.8)",
+            fontSize: 10,
+            padding: "7px 9px",
+            fontFamily: "inherit",
+            resize: "vertical",
+            lineHeight: 1.4,
+          }}
+        />
         <input
           ref={fileInputRef}
           type="file"
           multiple
           accept="image/*,video/*,audio/*,.woff2,.woff,.ttf,.otf"
           style={{ display: "none" }}
-          onChange={(e) => e.target.files && onFilesSelected(e.target.files)}
+          onChange={(e) => e.target.files && onFilesSelected(e.target.files, uploadIntent.trim() || undefined)}
         />
       </div>
 
@@ -660,6 +689,7 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
   const [sessionId] = useState(() => crypto.randomUUID());
   const [assets, setAssets] = useState<AssetDTO[]>([]);
   const [uploads, setUploads] = useState<UploadItem[]>([]);
+  const [uploadIntent, setUploadIntent] = useState("");
   const [dragging, setDragging] = useState(false);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -678,6 +708,7 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
       setStep("assets");
       setAssets([]);
       setUploads([]);
+      setUploadIntent("");
       setMessages([]);
       setInput("");
       setLastComposition(null);
@@ -695,7 +726,7 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
   }, [step]);
 
   // ── asset upload ─────────────────────────────────────────────────────────
-  const uploadFile = useCallback(async (file: File) => {
+  const uploadFile = useCallback(async (file: File, uploadInstruction?: string) => {
     const uid = `${Date.now()}-${file.name}`;
     const item: UploadItem = { id: uid, filename: file.name, progress: 0, done: false };
     setUploads((prev) => [...prev, item]);
@@ -703,65 +734,56 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
       setUploads((prev) => prev.map((u) => (u.id === uid ? { ...u, ...p } : u)));
 
     try {
-      const urlRes = await fetch(`${API_URL}/api/assets/upload-url`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ filename: file.name, mimeType: file.type || "application/octet-stream", sizeBytes: file.size, sessionId }),
-      });
-      if (!urlRes.ok) {
-        const errBody = await urlRes.json().catch(() => ({})) as {
-          error?: string;
-          details?: string;
-          step?: string;
-        };
-        const hint = [errBody.error, errBody.step && `(${errBody.step})`, errBody.details].filter(Boolean).join(" ");
-        throw new Error(hint || "Error al obtener URL de subida");
-      }
-      const { uploadUrl, asset } = await urlRes.json() as {
-        uploadUrl: string;
-        asset: AssetDTO;
-      };
-      update({ progress: 20 });
+      const uploadedAsset = await new Promise<AssetDTO>((resolve, reject) => {
+        const formData = new FormData();
+        formData.append("file", file, file.name);
+        formData.append("sessionId", sessionId);
+        if (uploadInstruction?.trim()) {
+          formData.append("description", uploadInstruction.trim());
+        }
 
-      await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (e) => {
-          if (e.lengthComputable) update({ progress: 20 + Math.round((e.loaded / e.total) * 70) });
+          if (e.lengthComputable) update({ progress: 5 + Math.round((e.loaded / e.total) * 90) });
         };
-        xhr.onload = () => xhr.status < 300 ? resolve() : reject(new Error(`HTTP ${xhr.status}`));
-        xhr.onerror = () => reject(new Error("Error de red"));
-        xhr.open("PUT", uploadUrl);
-        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-        xhr.send(file);
+        xhr.onload = () => {
+          let payload: { error?: string; asset?: AssetDTO } = {};
+          try {
+            payload = JSON.parse(xhr.responseText) as { error?: string; asset?: AssetDTO };
+          } catch {
+            // ignore JSON parse errors and fallback to generic message
+          }
+          if (xhr.status >= 200 && xhr.status < 300 && payload.asset) {
+            resolve(payload.asset);
+            return;
+          }
+          reject(new Error(payload.error ?? `Error al subir asset (${xhr.status})`));
+        };
+        xhr.onerror = () => reject(new Error("Error de red al subir asset"));
+        xhr.open("POST", `${API_URL}/api/assets/upload-direct`);
+        xhr.withCredentials = true;
+        xhr.send(formData);
       });
 
-      update({ progress: 92 });
-      const finRes = await fetch(`${API_URL}/api/assets/${asset.id}/finalize-upload`, {
-        method: "POST",
-        credentials: "include",
-      });
-      const finJson = await finRes.json().catch(() => ({})) as { error?: string; asset?: AssetDTO };
-      if (!finRes.ok) {
-        throw new Error(finJson.error ?? `Error al finalizar subida (${finRes.status})`);
-      }
-
-      const finalAsset = finJson.asset ?? asset;
       update({ progress: 100, done: true });
-      setAssets((prev) => [...prev, finalAsset]);
+      setAssets((prev) => [...prev, uploadedAsset]);
       setTimeout(() => setUploads((prev) => prev.filter((u) => u.id !== uid)), 2000);
     } catch (err) {
       update({ error: err instanceof Error ? err.message : "Error", done: true });
     }
   }, [sessionId]);
 
-  const handleFiles = useCallback((files: FileList | File[]) => {
-    Array.from(files).forEach(uploadFile);
+  const handleFiles = useCallback((files: FileList | File[], uploadInstruction?: string) => {
+    Array.from(files).forEach((file) => uploadFile(file, uploadInstruction));
   }, [uploadFile]);
 
   const onDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
   const onDragLeave = () => setDragging(false);
-  const onDrop = (e: React.DragEvent) => { e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files); };
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    handleFiles(e.dataTransfer.files, uploadIntent.trim() || undefined);
+  };
 
   const handleDeleteAsset = async (id: string) => {
     await fetch(`${API_URL}/api/assets/${id}`, { method: "DELETE", credentials: "include" });
@@ -796,8 +818,8 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
 
     const conversation = [...messages, userMsg].map((m) => ({
       role: m.role,
-      content: m.role === "user" && assetContext && messages.length === 0
-        ? m.content + assetContext
+      content: m.role === "user" && assetContext
+        ? `${m.content}${assetContext}`
         : m.content,
     }));
 
@@ -951,6 +973,8 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
             onDeleteAsset={handleDeleteAsset}
             onUpdateAsset={handleUpdateAsset}
             onNext={() => setStep("chat")}
+            uploadIntent={uploadIntent}
+            onUploadIntentChange={setUploadIntent}
             dragging={dragging}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}

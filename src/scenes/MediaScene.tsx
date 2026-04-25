@@ -23,6 +23,7 @@ import { AnimatedLayer } from "../components/AnimatedLayer";
 // ─────────────────────────────────────────────────────────────────────────────
 
 function ImageLayer({ data, sequence }: { data: ImageData; sequence: Sequence }) {
+  if (!data.src) return null;
   const content = (
     <Img
       src={data.src}
@@ -57,6 +58,7 @@ function ImageLayer({ data, sequence }: { data: ImageData; sequence: Sequence })
 // ─────────────────────────────────────────────────────────────────────────────
 
 function VideoLayer({ data, sequence }: { data: VideoData; sequence: Sequence }) {
+  if (!data.src) return null;
   const content = (
     <Video
       src={data.src}
@@ -171,6 +173,7 @@ function AnimatedImageLayer({
 // ─────────────────────────────────────────────────────────────────────────────
 
 function LottieLayer({ data, sequence }: { data: LottieData; sequence: Sequence }) {
+  if (!data.src) return null;
   const [handle] = useState(() => delayRender("Loading Lottie"));
   const [animationData, setAnimationData] = useState<LottieAnimationData | null>(null);
 

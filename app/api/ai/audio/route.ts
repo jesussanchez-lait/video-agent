@@ -89,7 +89,12 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             text: text.trim(),
             model_id: "eleven_multilingual_v2",
-            voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+            voice_settings: {
+              stability: 0.62,
+              similarity_boost: 0.82,
+              style: 0.35,
+              use_speaker_boost: true,
+            },
           }),
         }
       );
@@ -114,8 +119,8 @@ export async function POST(request: NextRequest) {
       }
 
       const musicLengthMs = durationMs ?? 10000;
-      // Always enforce instrumental — append constraint so ElevenLabs never adds vocals.
-      const instrumentalPrompt = `${prompt.trim()}, instrumental, no vocals, no singing, no voice`;
+      // Always enforce instrumental — triple constraint so ElevenLabs never adds vocals.
+      const instrumentalPrompt = `${prompt.trim()}, purely instrumental, absolutely no vocals, no singing, no voice, no lyrics, background music only`;
       const res = await fetch(
         "https://api.elevenlabs.io/v1/music?output_format=mp3_44100_128",
         {

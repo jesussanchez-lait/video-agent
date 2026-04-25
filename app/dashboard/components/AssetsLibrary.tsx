@@ -362,6 +362,7 @@ export function AssetsLibrary() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<FilterTab>("all");
   const [uploads, setUploads] = useState<UploadItem[]>([]);
+  const [uploadIntent, setUploadIntent] = useState("");
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -381,7 +382,7 @@ export function AssetsLibrary() {
   useEffect(() => { fetchAssets(); }, [fetchAssets]);
 
   // ── upload logic ─────────────────────────────────────────────────────────────
-  const uploadFile = useCallback(async (file: File) => {
+  const uploadFile = useCallback(async (file: File, uploadInstruction?: string) => {
     const uploadId = `${Date.now()}-${file.name}`;
     const item: UploadItem = { id: uploadId, filename: file.name, progress: 0, done: false };
     setUploads((prev) => [...prev, item]);
@@ -390,63 +391,41 @@ export function AssetsLibrary() {
       setUploads((prev) => prev.map((u) => (u.id === uploadId ? { ...u, ...patch } : u)));
 
     try {
-      // 1. Get signed upload URL
-      const urlRes = await fetch(`${API_URL}/api/assets/upload-url`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          filename: file.name,
-          mimeType: file.type || "application/octet-stream",
-          sizeBytes: file.size,
-        }),
-      });
+      const uploadedAsset = await new Promise<AssetDTO>((resolve, reject) => {
+        const formData = new FormData();
+        formData.append("file", file, file.name);
+        if (uploadInstruction?.trim()) {
+          formData.append("description", uploadInstruction.trim());
+        }
 
-      if (!urlRes.ok) {
-        const err = await urlRes.json().catch(() => ({})) as {
-          error?: string;
-          details?: string;
-          step?: string;
-        };
-        const hint = [err.error, err.step && `(${err.step})`, err.details].filter(Boolean).join(" ");
-        throw new Error(hint || "Error obteniendo URL de subida");
-      }
-
-      const { uploadUrl, asset } = await urlRes.json() as { uploadUrl: string; asset: AssetDTO };
-      update({ progress: 20 });
-
-      // 2. Upload via XHR for progress tracking
-      await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.upload.onprogress = (e) => {
           if (e.lengthComputable) {
-            const pct = 20 + Math.round((e.loaded / e.total) * 70);
+            const pct = 5 + Math.round((e.loaded / e.total) * 90);
             update({ progress: pct });
           }
         };
         xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) resolve();
-          else reject(new Error(`Upload HTTP ${xhr.status}`));
+          let payload: { error?: string; asset?: AssetDTO } = {};
+          try {
+            payload = JSON.parse(xhr.responseText) as { error?: string; asset?: AssetDTO };
+          } catch {
+            // ignore JSON parse errors and fallback to generic message
+          }
+          if (xhr.status >= 200 && xhr.status < 300 && payload.asset) {
+            resolve(payload.asset);
+            return;
+          }
+          reject(new Error(payload.error ?? `Error al subir asset (${xhr.status})`));
         };
-        xhr.onerror = () => reject(new Error("Error de red al subir"));
-        xhr.open("PUT", uploadUrl);
-        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-        xhr.send(file);
+        xhr.onerror = () => reject(new Error("Error de red al subir asset"));
+        xhr.open("POST", `${API_URL}/api/assets/upload-direct`);
+        xhr.withCredentials = true;
+        xhr.send(formData);
       });
-
-      update({ progress: 92 });
-      const finRes = await fetch(`${API_URL}/api/assets/${asset.id}/finalize-upload`, {
-        method: "POST",
-        credentials: "include",
-      });
-      const finJson = await finRes.json().catch(() => ({})) as { error?: string; asset?: AssetDTO };
-      if (!finRes.ok) {
-        throw new Error(finJson.error ?? `Error al finalizar subida (${finRes.status})`);
-      }
-      const finalAsset = finJson.asset ?? asset;
 
       update({ progress: 100, done: true });
-      setAssets((prev) => [finalAsset, ...prev]);
+      setAssets((prev) => [uploadedAsset, ...prev]);
 
       // Remove upload item after 2s
       setTimeout(() => {
@@ -460,9 +439,10 @@ export function AssetsLibrary() {
 
   const handleFiles = useCallback(
     (files: FileList | File[]) => {
-      Array.from(files).forEach(uploadFile);
+      const instruction = uploadIntent.trim() || undefined;
+      Array.from(files).forEach((file) => uploadFile(file, instruction));
     },
-    [uploadFile]
+    [uploadFile, uploadIntent]
   );
 
   // ── drag & drop ──────────────────────────────────────────────────────────────
@@ -532,6 +512,26 @@ export function AssetsLibrary() {
         <p style={{ margin: "4px 0 0", fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
           Imágenes, videos, audio y fuentes · Se guardan en Firebase Storage
         </p>
+        <textarea
+          value={uploadIntent}
+          onChange={(e) => setUploadIntent(e.target.value)}
+          placeholder="Opcional: explica qué quieres que la IA haga con estos assets al usarlos."
+          rows={2}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            marginTop: 10,
+            width: "min(100%, 520px)",
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(157,255,32,0.25)",
+            borderRadius: 8,
+            color: "rgba(255,255,255,0.85)",
+            fontSize: 11,
+            padding: "8px 10px",
+            fontFamily: "inherit",
+            resize: "vertical",
+            lineHeight: 1.4,
+          }}
+        />
         <input
           ref={fileInputRef}
           type="file"

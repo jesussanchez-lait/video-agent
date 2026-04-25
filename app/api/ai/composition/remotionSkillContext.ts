@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const SKILL_DIR = path.join(process.cwd(), ".agents/skills/remotion-best-practices");
+const SKILL_DIR = path.join(process.cwd(), ".claude/skills/remotion-best-practices");
 
 /** Reglas alineadas con SKILL.md; contenido efectivo para el modelo (no solo el índice). */
 const RULE_FILES = [
