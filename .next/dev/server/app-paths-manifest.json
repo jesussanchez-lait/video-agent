@@ -10,5 +10,6 @@
   "/api/compositions/route": "app/api/compositions/route.js",
   "/api/render/[id]/route": "app/api/render/[id]/route.js",
   "/dashboard/page": "app/dashboard/page.js",
+  "/editor/page": "app/editor/page.js",
   "/login/page": "app/login/page.js"
 }

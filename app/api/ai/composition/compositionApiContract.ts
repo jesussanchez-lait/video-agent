@@ -50,89 +50,150 @@ Cada elemento de "sequences":
 • Si faltan datos: añade escenas de insight, comparativas o assets del usuario.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎧 ELEVENLABS — AUDIO OBLIGATORIO (música + voz)
+🎧 ELEVENLABS — UNA VOZ + MÚSICA DE FONDO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 El backend genera el audio real desde sceneData._elevenlabs y rellena "src" con la URL.
-Sin _elevenlabs no habrá audio. SIEMPRE incluye al menos música y voz.
+Sin _elevenlabs no habrá audio. SIEMPRE incluye música y UNA voz completa.
 
-Flujo de diseño:
-1. Diseña todas las escenas visuales con sus duraciones.
-2. Calcula totalBrutoFrames = Σ(durationInFrames escenas visuales).
-3. Añade secuencias sceneType "audio" con _elevenlabs.
+REGLA DE ORO: UNA sola pista de voz para todo el video (no una por escena).
+La voz narra el reel completo de principio a fin — como un documental.
 
-Orden de secuencias (el reproductor usa "order"):
-• Música de fondo: order 0 (la primera), arranca desde el inicio.
-• Voz de una escena: colócala INMEDIATAMENTE ANTES de la escena visual en el array.
-  Ejemplo completo:
-  [
-    { order: 0, sceneType: "audio", sceneData: { _elevenlabs: { type: "music", ... }, volume: 0.14, loop: true, src: "" } },
-    { order: 1, sceneType: "audio", sceneData: { _elevenlabs: { type: "voice", text: "..." }, volume: 0.9, src: "" } },
-    { order: 2, sceneType: "sc-intro", ... },
-    { order: 3, sceneType: "audio", sceneData: { _elevenlabs: { type: "voice", text: "..." }, volume: 0.9, src: "" } },
-    { order: 4, sceneType: "stat-hero", ... },
-    ...
-  ]
+━━━━━ ESTRUCTURA DE SECUENCIAS DE AUDIO ━━━━━
 
-sceneType "audio" — sceneData obligatorio:
-• "src": ""                  (vacío; backend lo rellena con la URL real)
-• "volume":
-    – música:  0.12–0.18     (SIEMPRE menor que la voz — música es fondo)
-    – voz:     0.9           (siempre)
-    – sfx:     0.35–0.5
-• "loop": true               (SOLO para música de fondo)
-• "durationInFrames":
-    – música:  totalBrutoFrames (= Σ durationInFrames escenas VISUALES)
-    – voz:     durationInFrames de la escena acompañada + 60 (margen 2s anti-corte)
-    – sfx:     durationSeconds × 30
+Siempre en este orden al inicio del array "sequences":
 
-⚠️ CRÍTICO — VOZ Y CORTE:
-    ElevenLabs genera audio de duración variable según el texto.
-    Si pones durationInFrames = duración exacta de la escena, Remotion CORTARÁ la voz a mitad.
-    SIEMPRE añade 60 frames de margen: voz.durationInFrames = escena + 60.
-    Si la escena es corta (120f), escribe un guion corto (1-2 frases) para que quepa.
+  order 0 → música de fondo (loop: true, durationInFrames: totalBrutoFrames)
+  order 1 → voz única completa  (loop: false, durationInFrames: totalBrutoFrames)
+  order 2 → sc-intro (primera escena visual)
+  order 3 → stat-hero
+  ...
 
-Marcador _elevenlabs (dentro de sceneData):
+El sistema ancla cada pista de audio a la primera escena visual cuyo order >= audio.order.
+Con order 0 y order 1, ambas pistas arrancan desde el frame 0 del video. ✓
 
-MÚSICA DE FONDO:
-  "_elevenlabs": {
-    "type": "music",
-    "prompt": "<describir género, BPM, instrumentos, mood — SIEMPRE instrumental, sin voz ni lírica>",
-    "durationMs": <totalBrutoFrames / 30 * 1000>
-  }
-  Ejemplos de prompts de música:
-  • "upbeat corporate electronic, inspiring, minimal percussion, 95 BPM, no vocals, no lyrics, instrumental only"
-  • "modern cinematic ambient, tense but hopeful, synthesizer pads, 80 BPM, instrumental"
-  • "hip-hop lo-fi beats, motivational, clean piano chords, 90 BPM, no vocals, instrumental"
+━━━━━ DURACIÓN DE LOS AUDIOS ━━━━━
 
-VOZ NARRATIVA:
-  "_elevenlabs": {
-    "type": "voice",
-    "text": "<guion hablado — emocional, narrativo, en el idioma del usuario. Ajusta la extensión para que quepa en (escena/30) segundos. Máx 2 frases por escena corta.>"
-  }
-  Principios del guion:
-  • Escribe como si le hablaras a un amigo, no como informe corporativo.
-  • El guion describe la EMOCIÓN del dato, no solo el número.
-  • Ejemplo malo:  "Las impresiones totales alcanzaron 3.2 millones con un incremento del 24%."
-  • Ejemplo bueno: "3.2 millones de personas vieron tu marca. Y crecimos 24% más que antes."
-  • Para escenas de 4s (120f): máx 15-20 palabras.
-  • Para escenas de 6s (180f): máx 25-35 palabras.
-  • Para escenas de 7s (210f): máx 35-45 palabras.
+• totalBrutoFrames = Σ(durationInFrames de TODAS las escenas VISUALES)
+  (No resta transiciones — es la suma bruta, para que los audios no se corten)
 
-SFX (opcional — solo si agrega valor):
-  "_elevenlabs": {
-    "type": "sfx",
-    "prompt": "<descripción del sonido, ej: 'whoosh transition sound effect, brief' o 'impact boom when number reveals'>",
-    "durationSeconds": <0.5–3.0>
-  }
+• música:  durationInFrames = totalBrutoFrames  (y loop: true por si acaso)
+• voz:     durationInFrames = totalBrutoFrames  (una sola pista, dura todo el video)
+• sfx:     durationInFrames = durationSeconds × 30  (muy cortos, opcionales)
+
+━━━━━ CALIBRACIÓN DEL GUION — CRÍTICO ━━━━━
+
+ElevenLabs narra a ~2.2 palabras/segundo. Escribe EXACTAMENTE este número de palabras:
+
+  totalSegundos = totalBrutoFrames / 30
+  max_palabras  = totalSegundos × 2.2   ← NO superes este límite
+
+  Ejemplos:
+    totalBrutoFrames = 900  (30s) → máx  66 palabras
+    totalBrutoFrames = 1200 (40s) → máx  88 palabras
+    totalBrutoFrames = 1350 (45s) → máx  99 palabras
+    totalBrutoFrames = 1800 (60s) → máx 132 palabras
+
+  ANTES de finalizar el JSON: cuenta las palabras del guion y ajusta si superas el límite.
+  Si el guion es más corto (±10%), mejor — habrá una pausa natural al final.
+
+━━━━━ MARCADORES _elevenlabs ━━━━━
+
+MÚSICA DE FONDO (order 0):
+{
+  "id": "seq-music",
+  "order": 0,
+  "sceneType": "audio",
+  "durationInFrames": <totalBrutoFrames>,
+  "sceneData": {
+    "src": "",
+    "volume": 0.14,
+    "loop": true,
+    "_elevenlabs": {
+      "type": "music",
+      "prompt": "<género, BPM, mood — SIEMPRE instrumental, sin voz ni lírica. Ej: 'upbeat corporate electronic, inspiring, 95 BPM, no vocals, instrumental only'>",
+      "durationMs": <totalBrutoFrames / 30 * 1000>
+    }
+  },
+  "transition": { "type": "none", "durationInFrames": 0, "timing": "linear" }
+}
+
+VOZ COMPLETA (order 1):
+{
+  "id": "seq-voice",
+  "order": 1,
+  "sceneType": "audio",
+  "durationInFrames": <totalBrutoFrames>,
+  "sceneData": {
+    "src": "",
+    "volume": 0.9,
+    "loop": false,
+    "_elevenlabs": {
+      "type": "voice",
+      "text": "<guion completo del video — narrativo, emocional, ≤ (totalBrutoFrames/30 × 2.2) palabras>"
+    }
+  },
+  "transition": { "type": "none", "durationInFrames": 0, "timing": "linear" }
+}
+
+━━━━━ EJEMPLO COMPLETO — REEL DE 30s ━━━━━
+
+totalBrutoFrames = 930 (sc-intro 120 + stat-hero 180 + stat-grid 180 + bar-chart 180 + insight 150 + sc-outro 120)
+max_palabras = 930/30 × 2.2 = 68 palabras
+
+"sequences": [
+  {
+    "id": "seq-music", "order": 0, "sceneType": "audio",
+    "durationInFrames": 930,
+    "sceneData": {
+      "src": "", "volume": 0.07, "loop": true,
+      "_elevenlabs": {
+        "type": "music",
+        "prompt": "upbeat corporate electronic, inspiring and confident, minimal percussion, 95 BPM, no vocals, instrumental only",
+        "durationMs": 31000
+      }
+    },
+    "transition": { "type": "none", "durationInFrames": 0, "timing": "linear" }
+  },
+  {
+    "id": "seq-voice", "order": 1, "sceneType": "audio",
+    "durationInFrames": 930,
+    "sceneData": {
+      "src": "", "volume": 0.9, "loop": false,
+      "_elevenlabs": {
+        "type": "voice",
+        "text": "Este mes, algo cambió. Tres millones de personas vieron tu contenido — veinticuatro por ciento más que antes. Instagram lidera con el doble que TikTok. Pero el dato que más importa: tu engagement subió a cuatro punto seis por ciento, mientras el promedio del sector es dos. Estás por encima. SocialCognitive te muestra cómo seguir creciendo."
+      }
+    },
+    "transition": { "type": "none", "durationInFrames": 0, "timing": "linear" }
+  },
+  { "id": "seq-intro",    "order": 2,  "sceneType": "sc-intro",   "durationInFrames": 120, ... },
+  { "id": "seq-hero",     "order": 3,  "sceneType": "stat-hero",   "durationInFrames": 180, ... },
+  ...
+]
+
+━━━━━ SFX OPCIONALES ━━━━━
+
+Para SFX (ej: impacto al revelar el número hero):
+{
+  "id": "seq-sfx-impact", "order": 2, "sceneType": "audio",
+  "durationInFrames": 60,
+  "sceneData": {
+    "src": "", "volume": 0.4,
+    "_elevenlabs": {
+      "type": "sfx",
+      "prompt": "deep cinematic impact boom, dramatic number reveal",
+      "durationSeconds": 1.5
+    }
+  },
+  "transition": { "type": "none", "durationInFrames": 0, "timing": "linear" }
+}
+(order 2 = ancla al mismo frame que el sc-intro, order 3 = ancla al stat-hero, etc.)
 
 Paquete mínimo OBLIGATORIO:
-  ✓ 1× música en order 0, loop true.
-  ✓ 1× voz para sc-intro.
-  ✓ 1× voz para stat-hero (el momento más impactante).
-  ✓ 1× voz para insight.
-  ✓ 1× voz para sc-outro.
-  Opcionales: voz para cada escena de datos, SFX en momentos clave.
+  ✓ order 0 — música de fondo, loop true, durationInFrames = totalBrutoFrames
+  ✓ order 1 — voz única completa, durationInFrames = totalBrutoFrames, ≤ max_palabras
+  Opcional: SFX puntuales en momentos de alto impacto
 
 Responde solo con el JSON (o un único bloque \`\`\`json con ese objeto).
 `.trim();

@@ -235,7 +235,7 @@ export const DynamicComposition: React.FC<Partial<CompositionInputProps>> = ({
     );
   }
 
-  const MUSIC_MAX_VOLUME  = 0.12;
+  const MUSIC_MAX_VOLUME  = 0.07;
   const VOICE_DEFAULT_VOL = 0.9;
 
   return (

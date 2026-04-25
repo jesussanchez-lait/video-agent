@@ -327,17 +327,59 @@ Plataformas:  sc:instagram · sc:linkedin · sc:youtube · sc:twitter · sc:tikt
 Otros:        sc:mail · sc:smartphone · sc:info · sc:brain
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎵 AUDIO — PRINCIPIOS FUNDAMENTALES
+🎵 AUDIO — VOZ ÚNICA + MÚSICA DE FONDO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-VOZ NARRATIVA (voice):
-  • El guion debe ser EMOCIONAL y NARRATIVO, no solo descriptivo de números.
-  • Escribe como si le hablaras a un amigo inteligente, no como informe corporativo.
-  • La voz describe LO QUE SE SIENTE al ver el dato, no solo el dato.
-  • Ejemplo malo:  "Los impresiones totales fueron 3.2 millones con un incremento del 24%."
-  • Ejemplo bueno: "3.2 millones de personas vieron tu marca este mes. Y crecimos 24% más que antes."
-  • Ajusta el guion para que quepa en el tiempo de la escena. Una frase corta por escena.
-  • volume de voz: 0.9 (siempre)
+REGLA FUNDAMENTAL: genera UNA SOLA pista de voz para todo el video.
+No una voz por escena. Una narración completa, continua, de principio a fin.
+
+POR QUÉ UNA SOLA VOZ:
+  • ElevenLabs genera mejor prosodia con texto largo — ritmo, pausas, énfasis naturales.
+  • La narración fluye como un relato continuo, no como frases sueltas por escena.
+  • Elimina silencios entre escenas. El espectador está enganchado todo el tiempo.
+  • El storytelling funciona como documental o podcast visual, no como presentación corporativa.
+
+CALIBRACIÓN DE PALABRAS — CRÍTICO:
+  ElevenLabs narra a ~2.2 palabras por segundo de audio generado.
+  Si escribes más palabras de las que caben, el audio supera la duración del video y se corta.
+
+  TABLA DE REFERENCIA (usa el total de segundos visuales del reel):
+    20 segundos → máx  44 palabras
+    25 segundos → máx  55 palabras
+    30 segundos → máx  66 palabras
+    35 segundos → máx  77 palabras
+    40 segundos → máx  88 palabras
+    45 segundos → máx  99 palabras
+    60 segundos → máx 132 palabras
+
+  FÓRMULA: max_palabras = segundos_del_reel × 2.2
+  ANTES de escribir el guion, cuenta las palabras del borrador y ajusta.
+
+ESTRUCTURA DEL GUION DE VOZ ÚNICA:
+  El guion sigue el mismo arco narrativo que el video:
+    [HOOK]      → frase de apertura impactante, engancha en los primeros 3 segundos
+    [TENSIÓN]   → el problema, el contexto, la pregunta que el reel va a responder
+    [DATOS]     → narra los números clave de forma emocional, no como lista
+    [INSIGHT]   → la conclusión que cambia la perspectiva del espectador
+    [CTA]       → llamada a la acción clara y urgente
+
+  El guion NO menciona "ahora veremos" ni "en esta diapositiva". La voz y el visual
+  cuentan la misma historia pero cada uno a su manera — se complementan, no se repiten.
+
+PRINCIPIOS DE ESCRITURA:
+  • Escribe como si le narraras a un amigo inteligente. Tono conversacional y directo.
+  • Los números se dicen completos y con impacto: "tres punto dos millones", no "3.2M".
+  • Usa pausas estratégicas con puntos. Una idea por frase.
+  • La voz describe la EMOCIÓN del dato, no solo el dato.
+  • Ejemplo malo:  "Las impresiones totales alcanzaron 3.2 millones, un incremento del 24%."
+  • Ejemplo bueno: "Tres millones de personas vieron tu marca. Y eso fue solo en enero."
+
+EJEMPLO DE GUION COMPLETO (reel de 30s, 66 palabras):
+  "Este mes, algo cambió. Tres millones de personas vieron tu contenido —
+   veinticuatro por ciento más que antes. Instagram lidera con el doble que TikTok.
+   Pero el dato que más importa: tu engagement subió a cuatro punto seis por ciento,
+   mientras el promedio del sector es dos. Estás por encima. Muy por encima.
+   SocialCognitive te muestra por qué — y cómo seguir creciendo."
 
 MÚSICA DE FONDO (music):
   • SIEMPRE instrumental — sin voz, sin lírica, sin canto.
@@ -347,14 +389,15 @@ MÚSICA DE FONDO (music):
       Resultados emocionantes: "upbeat electronic, inspiring cinematic, 110 BPM"
       Reporte de crecimiento:  "modern hip-hop instrumental, motivational, 95 BPM"
       Análisis premium:        "lo-fi jazz ambient, sophisticated, 80 BPM"
-  • volume de música: 0.12–0.18 (SIEMPRE menor que la voz)
-  • La música no debe competir con la voz. Es fondo, no protagonista.
+      Análisis político/tenso: "orchestral ambient tension, strings and piano, 75 BPM"
+  • volume de música: 0.06–0.08 (SIEMPRE mucho menor que la voz)
+  • La música es fondo, no protagonista. Nunca compite con la voz.
   • loop: true — se repite durante todo el reel.
 
 SFX (sfx — opcional):
-  • Solo úsalos si agregan valor narrativo (impacto al revelar un número, whoosh entre escenas).
-  • volume: 0.3–0.5
-  • durationSeconds: 0.5–3.0 (cortos)
+  • Solo si agregan valor narrativo real (impacto al revelar el número hero, whoosh).
+  • volume: 0.35–0.5
+  • durationSeconds: 0.5–2.0 (muy cortos)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚡ REGLAS CRÍTICAS

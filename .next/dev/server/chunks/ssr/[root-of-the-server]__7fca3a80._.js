@@ -50,19 +50,27 @@ const PROJECT_ID = process.env.FIREBASE_PROJECT_ID ?? "lait-video-editor";
 const STORAGE_BUCKET = process.env.FIREBASE_STORAGE_BUCKET?.trim() || "lait-video-editor.firebasestorage.app";
 const FIREBASE_CREDENTIAL_HELP = "Si ves 'Invalid JWT Signature' o 'UNAUTHENTICATED': (1) Sincroniza la hora del sistema. (2) Regenera la clave en Firebase Console → Configuración → Cuentas de servicio → Generar nueva clave privada.";
 function getCredential() {
-    // 1. GOOGLE_APPLICATION_CREDENTIALS — estándar de Google Cloud
-    const adcPath = process.env.GOOGLE_APPLICATION_CREDENTIALS ?? "lait-video-editor-firebase-adminsdk-fbsvc-423ef0596b.json";
+    const adc = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    // 1. GOOGLE_APPLICATION_CREDENTIALS como JSON inline (App Hosting / Secret Manager)
+    if (adc?.trimStart().startsWith("{")) {
+        try {
+            const parsed = JSON.parse(adc);
+            return (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$2c$__$5b$project$5d2f$node_modules$2f$firebase$2d$admin$29$__["cert"])(parsed);
+        } catch  {
+            throw new Error("GOOGLE_APPLICATION_CREDENTIALS contiene JSON inválido.");
+        }
+    }
+    // 2. GOOGLE_APPLICATION_CREDENTIALS como ruta a un archivo (desarrollo local)
+    const adcPath = adc ?? "lait-video-editor-firebase-adminsdk-fbsvc-423ef0596b.json";
     const resolvedPath = __TURBOPACK__imported__module__$5b$externals$5d2f$path__$5b$external$5d$__$28$path$2c$__cjs$29$__["default"].isAbsolute(adcPath) ? adcPath : __TURBOPACK__imported__module__$5b$externals$5d2f$path__$5b$external$5d$__$28$path$2c$__cjs$29$__["default"].resolve(process.cwd(), adcPath);
     if (__TURBOPACK__imported__module__$5b$externals$5d2f$fs__$5b$external$5d$__$28$fs$2c$__cjs$29$__["default"].existsSync(resolvedPath)) {
         return (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$2c$__$5b$project$5d2f$node_modules$2f$firebase$2d$admin$29$__["cert"])(resolvedPath);
     }
-    if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    if (adc) {
         throw new Error(`GOOGLE_APPLICATION_CREDENTIALS apunta a un archivo inexistente: ${resolvedPath}`);
     }
-    // 2. Archivo de service account (FIREBASE_SERVICE_ACCOUNT_PATH o *-adminsdk-*.json)
-    const candidates = process.env.FIREBASE_SERVICE_ACCOUNT_PATH ? [
-        process.env.FIREBASE_SERVICE_ACCOUNT_PATH
-    ] : [
+    // 3. Archivos *-adminsdk-*.json en la raíz del proyecto (fallback local)
+    const candidates = [
         "lait-video-editor-firebase-adminsdk-fbsvc-423ef0596b.json",
         "lait-video-editor-firebase-adminsdk-fbsvc-feeabf3dcd.json"
     ];
@@ -76,10 +84,10 @@ function getCredential() {
             }
         }
     }
-    // 3. Variables de entorno (FIREBASE_PRIVATE_KEY, etc.)
+    // 4. Variables de entorno individuales (FIREBASE_PRIVATE_KEY, etc.)
     const raw = process.env.FIREBASE_PRIVATE_KEY;
     if (!raw) {
-        throw new Error("Configura Firebase Admin: GOOGLE_APPLICATION_CREDENTIALS, el archivo JSON del service account, o FIREBASE_PRIVATE_KEY en .env");
+        throw new Error("Configura Firebase Admin: GOOGLE_APPLICATION_CREDENTIALS (ruta o JSON), el archivo JSON del service account, o FIREBASE_PRIVATE_KEY en .env");
     }
     const privateKey = raw.replace(/\\n/g, "\n").trim();
     return (0, __TURBOPACK__imported__module__$5b$externals$5d2f$firebase$2d$admin$2f$app__$5b$external$5d$__$28$firebase$2d$admin$2f$app$2c$__esm_import$2c$__$5b$project$5d2f$node_modules$2f$firebase$2d$admin$29$__["cert"])({
