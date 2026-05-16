@@ -2,6 +2,7 @@
 
 import { Player } from "@remotion/player";
 import { DynamicComposition } from "../src/Composition";
+import { HeygenPreview } from "./components/HeygenPreview";
 import type { CompositionDTO } from "../src/types";
 
 interface VideoPlayerProps {
@@ -29,6 +30,10 @@ export default function VideoPlayer({ composition }: VideoPlayerProps) {
         inicializar la colección.
       </div>
     );
+  }
+
+  if (composition.renderEngine === "heygen") {
+    return <HeygenPreview composition={composition} />;
   }
 
   const { fps, width, height, sequences, totalDurationInFrames } = composition;

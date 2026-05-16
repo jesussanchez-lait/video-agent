@@ -291,6 +291,8 @@ function compositionToDTO(id, doc) {
         height: doc.height,
         sequences: doc.sequences,
         totalDurationInFrames: doc.totalDurationInFrames,
+        renderEngine: doc.renderEngine ?? "remotion",
+        heygen: doc.heygen,
         createdAt: doc.createdAt.toDate().toISOString(),
         updatedAt: doc.updatedAt.toDate().toISOString()
     };

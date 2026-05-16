@@ -46,12 +46,44 @@
       "namedRegex": "^/api/compositions/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/heygen/jobs/[compositionId]",
+      "regex": "^/api/heygen/jobs/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcompositionId": "nxtPcompositionId"
+      },
+      "namedRegex": "^/api/heygen/jobs/(?<nxtPcompositionId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/heygen/preview/[id]",
+      "regex": "^/api/heygen/preview/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/heygen/preview/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/render/[id]",
       "regex": "^/api/render/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/render/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/render-heygen/[id]",
+      "regex": "^/api/render\\-heygen/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/render\\-heygen/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/compositions/[id]/preview-heygen",
+      "regex": "^/compositions/([^/]+?)/preview\\-heygen(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/compositions/(?<nxtPid>[^/]+?)/preview\\-heygen(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -80,16 +112,34 @@
       "namedRegex": "^/api/ai/audio(?:/)?$"
     },
     {
+      "page": "/api/ai/audio/duration",
+      "regex": "^/api/ai/audio/duration(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/ai/audio/duration(?:/)?$"
+    },
+    {
       "page": "/api/ai/composition",
       "regex": "^/api/ai/composition(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/ai/composition(?:/)?$"
     },
     {
+      "page": "/api/ai/heygen-plan",
+      "regex": "^/api/ai/heygen\\-plan(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/ai/heygen\\-plan(?:/)?$"
+    },
+    {
       "page": "/api/assets",
       "regex": "^/api/assets(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/assets(?:/)?$"
+    },
+    {
+      "page": "/api/assets/upload-direct",
+      "regex": "^/api/assets/upload\\-direct(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/assets/upload\\-direct(?:/)?$"
     },
     {
       "page": "/api/assets/upload-url",
@@ -126,6 +176,18 @@
       "regex": "^/api/compositions/init(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/compositions/init(?:/)?$"
+    },
+    {
+      "page": "/api/heygen/avatar-segment",
+      "regex": "^/api/heygen/avatar\\-segment(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/heygen/avatar\\-segment(?:/)?$"
+    },
+    {
+      "page": "/api/heygen/compile",
+      "regex": "^/api/heygen/compile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/heygen/compile(?:/)?$"
     },
     {
       "page": "/dashboard",

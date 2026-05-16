@@ -76,6 +76,24 @@ env:
     availability:
       - RUNTIME
 
+  # ── HeyGen / HyperFrames ────────────────────────────────
+  - variable: HEYGEN_API_KEY
+    secret: sk_V2_hgu_k5jZ1wh8ToM_m0AAyLyANXdm7SDyYs18ggA2yhSSytr8
+    availability:
+      - RUNTIME
+
+  # Opcional: avatar por defecto si el plan no sugiere uno
+  # - variable: HEYGEN_DEFAULT_AVATAR_ID
+  #   value: ""
+  #   availability:
+  #     - RUNTIME
+
+  # Fase 2: URL del worker de render MP4
+  # - variable: HYPERFRAMES_RENDER_WORKER_URL
+  #   value: ""
+  #   availability:
+  #     - RUNTIME
+
   # ── Sesión JWT ──────────────────────────────────────────
   - variable: SESSION_SECRET
     secret: session-secret

@@ -14,6 +14,7 @@ import {
   type DocumentData,
 } from "firebase-admin/firestore";
 import { adminApp } from "@/firebase-admin";
+import type { CompositionHeygenMeta, RenderEngine } from "@/types/heygen";
 import type {
   CompositionDTO,
   CompositionStatus,
@@ -59,6 +60,8 @@ export interface CompositionDoc {
   height: number;
   sequences: Sequence[];
   totalDurationInFrames: number;
+  renderEngine?: RenderEngine;
+  heygen?: CompositionHeygenMeta;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -120,6 +123,8 @@ export function compositionToDTO(id: string, doc: CompositionDoc): CompositionDT
     height: doc.height,
     sequences: doc.sequences,
     totalDurationInFrames: doc.totalDurationInFrames,
+    renderEngine: doc.renderEngine ?? "remotion",
+    heygen: doc.heygen,
     createdAt: doc.createdAt.toDate().toISOString(),
     updatedAt: doc.updatedAt.toDate().toISOString(),
   };

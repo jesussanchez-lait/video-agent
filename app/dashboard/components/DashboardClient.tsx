@@ -46,11 +46,22 @@ export function DashboardClient({
     router.refresh();
   };
 
-  const handleDownload = async (e: React.MouseEvent, compositionId: string, title: string) => {
+  const handleDownload = async (
+    e: React.MouseEvent,
+    compositionId: string,
+    title: string,
+    engine?: CompositionDTO["renderEngine"]
+  ) => {
     e.stopPropagation();
     setRenderingId(compositionId);
     try {
-      const res = await fetch(`/api/render/${compositionId}`);
+      const endpoint =
+        engine === "heygen"
+          ? `/api/render-heygen/${compositionId}`
+          : `/api/render/${compositionId}`;
+      const res = await fetch(endpoint, {
+        method: engine === "heygen" ? "POST" : "GET",
+      });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setAlertModal({ title: "Error al renderizar", message: data.error ?? "No se pudo renderizar el video." });
@@ -167,7 +178,7 @@ export function DashboardClient({
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
                 <thead>
                   <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
-                    {["Título", "Escenas", "Duración", "Resolución", "FPS", "Estado"].map((h) => (
+                    {["Título", "Motor", "Escenas", "Duración", "Resolución", "FPS", "Estado"].map((h) => (
                       <th key={h} style={{ textAlign: "left", padding: "12px 16px", color: "rgba(255,255,255,0.5)", fontWeight: 600, letterSpacing: 1 }}>
                         {h}
                       </th>
@@ -191,24 +202,40 @@ export function DashboardClient({
                       <td style={{ padding: "12px 16px", color: selectedId === c.id ? "#9DFF20" : "#fff", fontWeight: selectedId === c.id ? 600 : 400 }}>
                         {c.title}
                       </td>
-                      <td style={{ padding: "12px 16px", color: "rgba(255,255,255,0.8)" }}>{c.sequences.length}</td>
+                      <td style={{ padding: "12px 16px", color: c.renderEngine === "heygen" ? "#64b4ff" : "rgba(255,255,255,0.6)", fontSize: 11, textTransform: "uppercase" }}>
+                        {c.renderEngine === "heygen" ? "HeyGen" : "Remotion"}
+                      </td>
+                      <td style={{ padding: "12px 16px", color: "rgba(255,255,255,0.8)" }}>
+                        {c.renderEngine === "heygen"
+                          ? (c.heygen?.plan?.segments.length ?? 0)
+                          : c.sequences.length}
+                      </td>
                       <td style={{ padding: "12px 16px", color: "rgba(255,255,255,0.8)" }}>{(c.totalDurationInFrames / c.fps).toFixed(1)}s</td>
                       <td style={{ padding: "12px 16px", color: "rgba(255,255,255,0.8)" }}>{c.width}×{c.height}</td>
                       <td style={{ padding: "12px 16px", color: "rgba(255,255,255,0.8)" }}>{c.fps}</td>
                       <td style={{ padding: "12px 16px", color: "rgba(255,255,255,0.7)", textTransform: "capitalize" }}>{c.status}</td>
                       <td style={{ padding: "12px 16px", textAlign: "right" }} onClick={(e) => e.stopPropagation()}>
                         <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-                          <a
-                            href={`/editor?id=${c.id}`}
-                            style={{ padding: "6px 12px", borderRadius: 6, border: "1px solid rgba(157,255,32,0.3)", background: "rgba(157,255,32,0.08)", color: "#9DFF20", fontSize: 12, textDecoration: "none", letterSpacing: 0.5 }}
-                          >
-                            Editar
-                          </a>
+                          {c.renderEngine === "heygen" ? (
+                            <a
+                              href={`/compositions/${c.id}/preview-heygen`}
+                              style={{ padding: "6px 12px", borderRadius: 6, border: "1px solid rgba(100,180,255,0.4)", background: "rgba(100,180,255,0.08)", color: "#64b4ff", fontSize: 12, textDecoration: "none", letterSpacing: 0.5 }}
+                            >
+                              Preview
+                            </a>
+                          ) : (
+                            <a
+                              href={`/editor?id=${c.id}`}
+                              style={{ padding: "6px 12px", borderRadius: 6, border: "1px solid rgba(157,255,32,0.3)", background: "rgba(157,255,32,0.08)", color: "#9DFF20", fontSize: 12, textDecoration: "none", letterSpacing: 0.5 }}
+                            >
+                              Editar
+                            </a>
+                          )}
                           <button
                             type="button"
-                            onClick={(e) => handleDownload(e, c.id, c.title)}
+                            onClick={(e) => handleDownload(e, c.id, c.title, c.renderEngine)}
                             disabled={!!renderingId}
-                            title="Renderizar y descargar MP4"
+                            title={c.renderEngine === "heygen" ? "Export MP4 (Fase 2 — requiere worker)" : "Renderizar y descargar MP4"}
                             style={{ padding: "6px 12px", borderRadius: 6, border: "1px solid rgba(100,160,255,0.4)", background: "rgba(100,160,255,0.08)", color: "#64a0ff", fontSize: 12, cursor: renderingId ? "wait" : "pointer", letterSpacing: 0.5, opacity: renderingId ? 0.7 : 1 }}
                           >
                             {renderingId === c.id ? "Renderizando…" : "↓ MP4"}
@@ -235,23 +262,36 @@ export function DashboardClient({
 
         {selected && (
           <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-            <a
-              href={`/editor?id=${selected.id}`}
-              style={{ padding: "8px 16px", borderRadius: 8, border: "1px solid rgba(157,255,32,0.3)", background: "rgba(157,255,32,0.08)", color: "#9DFF20", fontSize: 13, textDecoration: "none", letterSpacing: 1 }}
-            >
-              Editar en Remotion Studio
-            </a>
+            {selected.renderEngine === "heygen" ? (
+              <a
+                href={`/compositions/${selected.id}/preview-heygen`}
+                style={{ padding: "8px 16px", borderRadius: 8, border: "1px solid rgba(100,180,255,0.4)", background: "rgba(100,180,255,0.08)", color: "#64b4ff", fontSize: 13, textDecoration: "none", letterSpacing: 1 }}
+              >
+                Preview HyperFrames
+              </a>
+            ) : (
+              <a
+                href={`/editor?id=${selected.id}`}
+                style={{ padding: "8px 16px", borderRadius: 8, border: "1px solid rgba(157,255,32,0.3)", background: "rgba(157,255,32,0.08)", color: "#9DFF20", fontSize: 13, textDecoration: "none", letterSpacing: 1 }}
+              >
+                Editar en Remotion Studio
+              </a>
+            )}
             <button
               type="button"
-              onClick={(e) => handleDownload(e, selected.id, selected.title)}
+              onClick={(e) => handleDownload(e, selected.id, selected.title, selected.renderEngine)}
               disabled={!!renderingId}
+              title={selected.renderEngine === "heygen" ? "Requiere HYPERFRAMES_RENDER_WORKER_URL (Fase 2)" : undefined}
               style={{ padding: "8px 16px", borderRadius: 8, border: "1px solid rgba(100,160,255,0.4)", background: "rgba(100,160,255,0.08)", color: "#64a0ff", fontSize: 13, cursor: renderingId ? "wait" : "pointer", letterSpacing: 1, opacity: renderingId ? 0.7 : 1 }}
             >
               {renderingId === selected.id ? "Renderizando… (puede tardar)" : "↓ Descargar MP4"}
             </button>
             <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 11, letterSpacing: 1, margin: 0 }}>
-              {selected.sequences.length} escenas ·{" "}
-              {(selected.totalDurationInFrames / selected.fps).toFixed(1)}s ·{" "}
+              {selected.renderEngine === "heygen" ? "HeyGen" : "Remotion"} ·{" "}
+              {selected.renderEngine === "heygen"
+                ? `${selected.heygen?.plan?.segments.length ?? 0} segmentos`
+                : `${selected.sequences.length} escenas`}{" "}
+              · {(selected.totalDurationInFrames / selected.fps).toFixed(1)}s ·{" "}
               {selected.width}×{selected.height} · {selected.fps}fps
             </p>
           </div>

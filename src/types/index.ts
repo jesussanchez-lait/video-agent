@@ -350,6 +350,10 @@ export interface Sequence {
 
 export type CompositionStatus = "draft" | "published" | "archived";
 
+export type { RenderEngine, CompositionHeygenMeta } from "./heygen";
+
+import type { RenderEngine, CompositionHeygenMeta } from "./heygen";
+
 export interface CompositionDTO {
   id: string;
   ownerId: string;
@@ -362,6 +366,8 @@ export interface CompositionDTO {
   height: number;
   sequences: Sequence[];
   totalDurationInFrames: number;
+  renderEngine?: RenderEngine;
+  heygen?: CompositionHeygenMeta;
   createdAt: string;
   updatedAt: string;
 }

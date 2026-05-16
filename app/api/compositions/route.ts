@@ -6,7 +6,7 @@ import {
   calcTotalDuration,
   linkAssetsToComposition,
 } from "@/lib/db";
-import type { Sequence, CompositionStatus } from "@/types";
+import type { Sequence, CompositionStatus, CompositionHeygenMeta, RenderEngine } from "@/types";
 
 const STUDIO_ORIGIN =
   process.env.NEXT_PUBLIC_STUDIO_URL ?? "http://localhost:3001";
@@ -60,6 +60,9 @@ export async function POST(request: NextRequest) {
     thumbnailUrl?: string;
     sessionId?: string;
     compositionId?: string;
+    renderEngine?: RenderEngine;
+    heygen?: CompositionHeygenMeta;
+    totalDurationInFrames?: number;
   };
 
   try {
@@ -85,10 +88,16 @@ export async function POST(request: NextRequest) {
       width,
       height,
       sequences,
-      totalDurationInFrames: calcTotalDuration(sequences),
+      totalDurationInFrames:
+        body.totalDurationInFrames ??
+        (body.heygen?.plan?.durationMs
+          ? Math.ceil((body.heygen.plan.durationMs / 1000) * fps)
+          : calcTotalDuration(sequences)),
     };
     if (body.description != null) data.description = body.description;
     if (body.thumbnailUrl != null) data.thumbnailUrl = body.thumbnailUrl;
+    if (body.renderEngine != null) data.renderEngine = body.renderEngine;
+    if (body.heygen != null) data.heygen = body.heygen;
 
     const composition = await createComposition(auth.uid, data, compositionId);
 

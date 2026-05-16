@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import type { Sequence, AssetDTO, AssetType } from "../../../src/types";
+import type { Sequence, AssetDTO, AssetType, RenderEngine } from "../../../src/types";
+import type { HeygenVideoPlan } from "../../../src/types/heygen";
+import { resolveHeygenAudioTracks } from "../../../src/lib/heygen/resolveHeygenAudio";
+import {
+  syncPlanSegmentsToVoiceDuration,
+  getVoiceTrackUrl,
+} from "../../../src/lib/heygen/syncPlanToAudio";
 
 const API_URL =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_API_URL) || "";
@@ -89,6 +95,22 @@ Top contenidos:
 Insight clave: [Ej: el video genera 3× más engagement que los carruseles]
 
 Incluye música instrumental animada y narración en español.`;
+
+const IDEAL_PROMPT_HEYGEN = `Crea un reel viral de 40 segundos en vertical (9:16).
+
+Hook impactante en los primeros 3 segundos. Alterna: avatar hablante, gráficos de datos, burbujas de texto y frame tipo noticias.
+Métricas clave con animación (usa mis assets si los subí).
+Tono energético, CTA final claro. Música instrumental + narración en español.`;
+
+function segmentNeedsAvatar(mode: string): boolean {
+  return (
+    mode === "avatar_full" ||
+    mode === "avatar_pip" ||
+    mode === "avatar_with_overlays" ||
+    mode === "news_ticker" ||
+    mode === "split_screen"
+  );
+}
 
 /** Genera el bloque de contexto de assets para el prompt de IA */
 function buildAssetContext(assets: AssetDTO[]): string {
@@ -453,6 +475,10 @@ function ChatStep({
   onConcretar,
   onBack,
   onUseTemplate,
+  renderEngine,
+  onRenderEngineChange,
+  avatarDescription,
+  onAvatarDescriptionChange,
 }: {
   assets: AssetDTO[];
   messages: ChatMessage[];
@@ -469,10 +495,74 @@ function ChatStep({
   onConcretar: () => void;
   onBack: () => void;
   onUseTemplate: () => void;
+  renderEngine: RenderEngine;
+  onRenderEngineChange: (e: RenderEngine) => void;
+  avatarDescription: string;
+  onAvatarDescriptionChange: (v: string) => void;
 }) {
   const isBusy = loading || creating;
+  const engineBadge =
+    renderEngine === "heygen"
+      ? "Claude · ElevenLabs · HeyGen · HyperFrames"
+      : "Claude · ElevenLabs · Remotion";
+
   return (
     <>
+      {/* Motor de render */}
+      <div style={{ margin: "8px 20px 0", display: "flex", flexDirection: "column", gap: 10 }}>
+        <p style={{ margin: 0, fontSize: 10, color: "rgba(255,255,255,0.45)", letterSpacing: 1, textTransform: "uppercase" }}>
+          Motor de video
+        </p>
+        <div style={{ display: "flex", gap: 8 }}>
+          {(
+            [
+              { id: "remotion" as const, label: "Remotion", desc: "Escenas analytics + editor" },
+              { id: "heygen" as const, label: "HeyGen", desc: "Avatar + HyperFrames viral" },
+            ] as const
+          ).map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              disabled={isBusy}
+              onClick={() => onRenderEngineChange(opt.id)}
+              style={{
+                flex: 1,
+                padding: "10px 12px",
+                borderRadius: 10,
+                border: `1px solid ${renderEngine === opt.id ? "rgba(157,255,32,0.6)" : "rgba(255,255,255,0.12)"}`,
+                background: renderEngine === opt.id ? "rgba(157,255,32,0.12)" : "rgba(255,255,255,0.03)",
+                color: renderEngine === opt.id ? "#9DFF20" : "rgba(255,255,255,0.65)",
+                cursor: isBusy ? "not-allowed" : "pointer",
+                textAlign: "left",
+              }}
+            >
+              <div style={{ fontSize: 12, fontWeight: 700 }}>{opt.label}</div>
+              <div style={{ fontSize: 10, opacity: 0.7, marginTop: 4 }}>{opt.desc}</div>
+            </button>
+          ))}
+        </div>
+        {renderEngine === "heygen" && (
+          <textarea
+            value={avatarDescription}
+            onChange={(e) => onAvatarDescriptionChange(e.target.value)}
+            placeholder="Describe el avatar: género, edad, estilo, vestimenta, fondo, tono…"
+            rows={3}
+            disabled={isBusy}
+            style={{
+              width: "100%",
+              padding: "9px 12px",
+              borderRadius: 9,
+              border: "1px solid rgba(100,180,255,0.35)",
+              background: "rgba(100,160,255,0.08)",
+              color: "#fff",
+              fontSize: 11,
+              fontFamily: "inherit",
+              resize: "vertical",
+            }}
+          />
+        )}
+      </div>
+
       {/* Asset summary bar */}
       {assets.length > 0 && (
         <div
@@ -653,7 +743,7 @@ function ChatStep({
           </button>
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
             <span style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>
-              OpenAI · ElevenLabs · Remotion
+              {engineBadge}
             </span>
             {lastComposition && (
               <button
@@ -699,7 +789,8 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [lastComposition, setLastComposition] = useState<GeneratedComposition | null>(null);
-
+  const [renderEngine, setRenderEngine] = useState<RenderEngine>("remotion");
+  const [avatarDescription, setAvatarDescription] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -712,6 +803,8 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
       setMessages([]);
       setInput("");
       setLastComposition(null);
+      setRenderEngine("remotion");
+      setAvatarDescription("");
       setError(null);
       setStatusMsg(null);
     }
@@ -803,10 +896,154 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
     }
   };
 
+  const runHeygenPipeline = async (
+    text: string,
+    conversation: Array<{ role: string; content: string }>
+  ) => {
+    if (!avatarDescription.trim()) {
+      throw new Error("Describe el avatar para videos HeyGen.");
+    }
+
+    const compositionId = crypto.randomUUID();
+
+    setStatusMsg("Planificando video viral (HeyGen + HyperFrames)…");
+    const planRes = await fetch(`${API_URL}/api/ai/heygen-plan`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        messages: conversation,
+        avatarDescription: avatarDescription.trim(),
+      }),
+    });
+    const planData = await planRes.json();
+    if (!planRes.ok) throw new Error(planData.error ?? "Error al generar plan");
+
+    let plan = planData.plan as HeygenVideoPlan;
+
+    const audioCount = plan.audioTracks.filter((t) => t._elevenlabs).length;
+    if (audioCount > 0) {
+      setStatusMsg(`Generando ${audioCount} pista(s) con ElevenLabs…`);
+      plan = await resolveHeygenAudioTracks(plan, API_URL, compositionId, setStatusMsg);
+    }
+
+    const voiceUrl = getVoiceTrackUrl(plan);
+    if (voiceUrl) {
+      setStatusMsg("Sincronizando segmentos con duración de voz…");
+      const durRes = await fetch(
+        `${API_URL}/api/ai/audio/duration?url=${encodeURIComponent(voiceUrl)}`,
+        { credentials: "include" }
+      );
+      const durData = await durRes.json();
+      if (durRes.ok && durData.durationMs) {
+        plan = syncPlanSegmentsToVoiceDuration(plan, durData.durationMs);
+      }
+    }
+
+    const needsAvatar = plan.segments.some((s) => segmentNeedsAvatar(s.layoutMode));
+    if (needsAvatar && voiceUrl) {
+      setStatusMsg("Generando avatar HeyGen (lip-sync con ElevenLabs)…");
+      try {
+        const avRes = await fetch(`${API_URL}/api/heygen/avatar-segment`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            audioUrl: voiceUrl,
+            segmentId: "full",
+            width: plan.width,
+            height: plan.height,
+            avatarDescription: avatarDescription.trim(),
+            avatarId: plan.suggestedAvatarId,
+            poll: true,
+          }),
+        });
+        const avData = await avRes.json();
+        if (avRes.ok && avData.videoUrl) {
+          plan = {
+            ...plan,
+            fullAvatarVideoUrl: avData.videoUrl,
+            segments: plan.segments.map((s) =>
+              segmentNeedsAvatar(s.layoutMode)
+                ? {
+                    ...s,
+                    avatar: {
+                      ...s.avatar,
+                      heygenVideoUrl: avData.videoUrl,
+                      heygenVideoId: avData.videoId,
+                    },
+                  }
+                : s
+            ),
+          };
+        } else if (!avRes.ok) {
+          console.warn("[heygen] avatar:", avData.error);
+          setStatusMsg("Avatar omitido (API HeyGen). Compilando solo gráficos…");
+        }
+      } catch (e) {
+        console.warn("[heygen] avatar error", e);
+        setStatusMsg("Avatar no disponible. Compilando gráficos…");
+      }
+    }
+
+    setStatusMsg("Guardando composición…");
+    const totalFrames = Math.ceil((plan.durationMs / 1000) * plan.fps);
+    const createRes = await fetch(`${API_URL}/api/compositions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        title: plan.title,
+        sequences: [],
+        fps: plan.fps,
+        width: plan.width,
+        height: plan.height,
+        sessionId,
+        compositionId,
+        renderEngine: "heygen",
+        totalDurationInFrames: totalFrames,
+        heygen: {
+          avatarDescription: avatarDescription.trim(),
+          plan,
+          renderStatus: "draft",
+        },
+      }),
+    });
+    const createData = await createRes.json();
+    if (!createRes.ok) throw new Error(createData.error ?? "Error al crear");
+
+    setStatusMsg("Compilando proyecto HyperFrames…");
+    const compileRes = await fetch(`${API_URL}/api/heygen/compile`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ compositionId, plan }),
+    });
+    const compileData = await compileRes.json();
+    if (!compileRes.ok) throw new Error(compileData.error ?? "Error al compilar");
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `assistant-${Date.now()}`,
+        role: "assistant",
+        content: `Video HeyGen "${plan.title}": ${plan.segments.length} segmentos dinámicos. Preview listo.`,
+      },
+    ]);
+
+    onCreated(createData.composition.id);
+    onClose();
+  };
+
   // ── AI generation ────────────────────────────────────────────────────────
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || loading || creating) return;
+
+    if (renderEngine === "heygen" && !avatarDescription.trim()) {
+      setError("Describe el avatar antes de generar con HeyGen.");
+      return;
+    }
 
     setInput("");
     const assetContext = buildAssetContext(assets);
@@ -814,7 +1051,11 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
     setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
     setError(null);
-    setStatusMsg("Generando composición con IA…");
+    setStatusMsg(
+      renderEngine === "heygen"
+        ? "Generando plan HeyGen…"
+        : "Generando composición con IA…"
+    );
 
     const conversation = [...messages, userMsg].map((m) => ({
       role: m.role,
@@ -824,6 +1065,13 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
     }));
 
     try {
+      if (renderEngine === "heygen") {
+        setLoading(false);
+        setCreating(true);
+        await runHeygenPipeline(text, conversation);
+        return;
+      }
+
       const res = await fetch(`${API_URL}/api/ai/composition`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -999,9 +1247,13 @@ export function CompositionChat({ open, onClose, onCreated }: CompositionChatPro
             onConcretar={handleConcretar}
             onBack={() => !isBusy && setStep("assets")}
             onUseTemplate={() => {
-              setInput(IDEAL_PROMPT);
+              setInput(renderEngine === "heygen" ? IDEAL_PROMPT_HEYGEN : IDEAL_PROMPT);
               setTimeout(() => inputRef.current?.focus(), 50);
             }}
+            renderEngine={renderEngine}
+            onRenderEngineChange={setRenderEngine}
+            avatarDescription={avatarDescription}
+            onAvatarDescriptionChange={setAvatarDescription}
           />
         )}
       </div>

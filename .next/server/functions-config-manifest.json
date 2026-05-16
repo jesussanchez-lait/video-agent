@@ -10,6 +10,9 @@
         }
       ]
     },
+    "/api/render-heygen/[id]": {
+      "maxDuration": 300
+    },
     "/api/render/[id]": {
       "maxDuration": 300
     }

@@ -1,0 +1,6 @@
+{
+  "name": "hyperframes-render-worker",
+  "private": true,
+  "type": "module",
+  "dependencies": {}
+}

@@ -47,6 +47,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 }
 
 
+// Validate ../../app/compositions/[id]/preview-heygen/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/compositions/[id]/preview-heygen">> = Specific
+  const handler = {} as typeof import("../../app/compositions/[id]/preview-heygen/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/dashboard/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/dashboard">> = Specific
@@ -83,6 +92,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/ai/audio/duration/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/ai/audio/duration">> = Specific
+  const handler = {} as typeof import("../../app/api/ai/audio/duration/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/api/ai/audio/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/ai/audio">> = Specific
@@ -96,6 +114,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/ai/composition">> = Specific
   const handler = {} as typeof import("../../app/api/ai/composition/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/ai/heygen-plan/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/ai/heygen-plan">> = Specific
+  const handler = {} as typeof import("../../app/api/ai/heygen-plan/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
@@ -123,6 +150,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/assets">> = Specific
   const handler = {} as typeof import("../../app/api/assets/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/assets/upload-direct/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/assets/upload-direct">> = Specific
+  const handler = {} as typeof import("../../app/api/assets/upload-direct/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
@@ -186,6 +222,51 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/compositions">> = Specific
   const handler = {} as typeof import("../../app/api/compositions/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/heygen/avatar-segment/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/heygen/avatar-segment">> = Specific
+  const handler = {} as typeof import("../../app/api/heygen/avatar-segment/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/heygen/compile/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/heygen/compile">> = Specific
+  const handler = {} as typeof import("../../app/api/heygen/compile/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/heygen/jobs/[compositionId]/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/heygen/jobs/[compositionId]">> = Specific
+  const handler = {} as typeof import("../../app/api/heygen/jobs/[compositionId]/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/heygen/preview/[id]/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/heygen/preview/[id]">> = Specific
+  const handler = {} as typeof import("../../app/api/heygen/preview/[id]/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/render-heygen/[id]/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/render-heygen/[id]">> = Specific
+  const handler = {} as typeof import("../../app/api/render-heygen/[id]/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
